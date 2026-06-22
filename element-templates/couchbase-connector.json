@@ -1,0 +1,1130 @@
+{
+  "$schema" : "https://unpkg.com/@camunda/zeebe-element-templates-json-schema/resources/schema.json",
+  "name" : "Couchbase DB Connector",
+  "id" : "io.camunda.connector.couchbase.v1",
+  "description" : "Perform Couchbase DB operations: Get, Upsert, Replace, Delete documents and execute SQL++ / N1QL queries.",
+  "metadata" : {
+    "keywords" : [ ]
+  },
+  "documentationRef" : "https://docs.couchbase.com/java-sdk/current/hello-world/start-using-sdk.html",
+  "version" : 1,
+  "category" : {
+    "id" : "connectors",
+    "name" : "Connectors"
+  },
+  "appliesTo" : [ "bpmn:Task" ],
+  "elementType" : {
+    "value" : "bpmn:ServiceTask"
+  },
+  "groups" : [ {
+    "id" : "authentication",
+    "label" : "Authentication"
+  }, {
+    "id" : "document",
+    "label" : "Document Settings"
+  }, {
+    "id" : "query",
+    "label" : "Query Settings"
+  }, {
+    "id" : "operation",
+    "label" : "Operation"
+  }, {
+    "id" : "connector",
+    "label" : "Connector"
+  }, {
+    "id" : "output",
+    "label" : "Output mapping"
+  }, {
+    "id" : "error",
+    "label" : "Error handling"
+  }, {
+    "id" : "retries",
+    "label" : "Retries"
+  } ],
+  "properties" : [ {
+    "value" : "io.camunda:couchbase:1",
+    "binding" : {
+      "property" : "type",
+      "type" : "zeebe:taskDefinition"
+    },
+    "type" : "Hidden"
+  }, {
+    "id" : "deleteDocument:authentication.connectionString",
+    "label" : "Connection String",
+    "description" : "Couchbase connection string. E.g. couchbase://localhost or couchbases://cluster.cloud.couchbase.com",
+    "optional" : false,
+    "constraints" : {
+      "notEmpty" : true
+    },
+    "feel" : "optional",
+    "group" : "authentication",
+    "binding" : {
+      "name" : "authentication.connectionString",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "deleteDocument",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "String"
+  }, {
+    "id" : "deleteDocument:authentication.username",
+    "label" : "Username",
+    "description" : "Couchbase cluster username",
+    "optional" : false,
+    "constraints" : {
+      "notEmpty" : true
+    },
+    "feel" : "optional",
+    "group" : "authentication",
+    "binding" : {
+      "name" : "authentication.username",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "deleteDocument",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "String"
+  }, {
+    "id" : "deleteDocument:authentication.password",
+    "label" : "Password",
+    "description" : "Couchbase cluster password. Use a secret: = secrets.COUCHBASE_PASSWORD",
+    "optional" : false,
+    "constraints" : {
+      "notEmpty" : true
+    },
+    "feel" : "optional",
+    "group" : "authentication",
+    "binding" : {
+      "name" : "authentication.password",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "deleteDocument",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "String"
+  }, {
+    "id" : "deleteDocument:authentication.requireTls",
+    "label" : "Require TLS (couchbases://)",
+    "description" : "When set to Required, rejects plaintext couchbase:// connections. Recommended for production and Capella.",
+    "optional" : true,
+    "value" : "false",
+    "group" : "authentication",
+    "binding" : {
+      "name" : "authentication.requireTls",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "deleteDocument",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "Dropdown",
+    "choices" : [ {
+      "name" : "Disabled (development)",
+      "value" : "false"
+    }, {
+      "name" : "Required (production)",
+      "value" : "true"
+    } ]
+  }, {
+    "id" : "query:authentication.connectionString",
+    "label" : "Connection String",
+    "description" : "Couchbase connection string. E.g. couchbase://localhost or couchbases://cluster.cloud.couchbase.com",
+    "optional" : false,
+    "constraints" : {
+      "notEmpty" : true
+    },
+    "feel" : "optional",
+    "group" : "authentication",
+    "binding" : {
+      "name" : "authentication.connectionString",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "query",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "String"
+  }, {
+    "id" : "query:authentication.username",
+    "label" : "Username",
+    "description" : "Couchbase cluster username",
+    "optional" : false,
+    "constraints" : {
+      "notEmpty" : true
+    },
+    "feel" : "optional",
+    "group" : "authentication",
+    "binding" : {
+      "name" : "authentication.username",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "query",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "String"
+  }, {
+    "id" : "query:authentication.password",
+    "label" : "Password",
+    "description" : "Couchbase cluster password. Use a secret: = secrets.COUCHBASE_PASSWORD",
+    "optional" : false,
+    "constraints" : {
+      "notEmpty" : true
+    },
+    "feel" : "optional",
+    "group" : "authentication",
+    "binding" : {
+      "name" : "authentication.password",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "query",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "String"
+  }, {
+    "id" : "query:authentication.requireTls",
+    "label" : "Require TLS (couchbases://)",
+    "description" : "When set to Required, rejects plaintext couchbase:// connections. Recommended for production and Capella.",
+    "optional" : true,
+    "value" : "false",
+    "group" : "authentication",
+    "binding" : {
+      "name" : "authentication.requireTls",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "query",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "Dropdown",
+    "choices" : [ {
+      "name" : "Disabled (development)",
+      "value" : "false"
+    }, {
+      "name" : "Required (production)",
+      "value" : "true"
+    } ]
+  }, {
+    "id" : "getDocument:authentication.connectionString",
+    "label" : "Connection String",
+    "description" : "Couchbase connection string. E.g. couchbase://localhost or couchbases://cluster.cloud.couchbase.com",
+    "optional" : false,
+    "constraints" : {
+      "notEmpty" : true
+    },
+    "feel" : "optional",
+    "group" : "authentication",
+    "binding" : {
+      "name" : "authentication.connectionString",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "getDocument",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "String"
+  }, {
+    "id" : "getDocument:authentication.username",
+    "label" : "Username",
+    "description" : "Couchbase cluster username",
+    "optional" : false,
+    "constraints" : {
+      "notEmpty" : true
+    },
+    "feel" : "optional",
+    "group" : "authentication",
+    "binding" : {
+      "name" : "authentication.username",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "getDocument",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "String"
+  }, {
+    "id" : "getDocument:authentication.password",
+    "label" : "Password",
+    "description" : "Couchbase cluster password. Use a secret: = secrets.COUCHBASE_PASSWORD",
+    "optional" : false,
+    "constraints" : {
+      "notEmpty" : true
+    },
+    "feel" : "optional",
+    "group" : "authentication",
+    "binding" : {
+      "name" : "authentication.password",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "getDocument",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "String"
+  }, {
+    "id" : "getDocument:authentication.requireTls",
+    "label" : "Require TLS (couchbases://)",
+    "description" : "When set to Required, rejects plaintext couchbase:// connections. Recommended for production and Capella.",
+    "optional" : true,
+    "value" : "false",
+    "group" : "authentication",
+    "binding" : {
+      "name" : "authentication.requireTls",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "getDocument",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "Dropdown",
+    "choices" : [ {
+      "name" : "Disabled (development)",
+      "value" : "false"
+    }, {
+      "name" : "Required (production)",
+      "value" : "true"
+    } ]
+  }, {
+    "id" : "replaceDocument:authentication.connectionString",
+    "label" : "Connection String",
+    "description" : "Couchbase connection string. E.g. couchbase://localhost or couchbases://cluster.cloud.couchbase.com",
+    "optional" : false,
+    "constraints" : {
+      "notEmpty" : true
+    },
+    "feel" : "optional",
+    "group" : "authentication",
+    "binding" : {
+      "name" : "authentication.connectionString",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "replaceDocument",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "String"
+  }, {
+    "id" : "replaceDocument:authentication.username",
+    "label" : "Username",
+    "description" : "Couchbase cluster username",
+    "optional" : false,
+    "constraints" : {
+      "notEmpty" : true
+    },
+    "feel" : "optional",
+    "group" : "authentication",
+    "binding" : {
+      "name" : "authentication.username",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "replaceDocument",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "String"
+  }, {
+    "id" : "replaceDocument:authentication.password",
+    "label" : "Password",
+    "description" : "Couchbase cluster password. Use a secret: = secrets.COUCHBASE_PASSWORD",
+    "optional" : false,
+    "constraints" : {
+      "notEmpty" : true
+    },
+    "feel" : "optional",
+    "group" : "authentication",
+    "binding" : {
+      "name" : "authentication.password",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "replaceDocument",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "String"
+  }, {
+    "id" : "replaceDocument:authentication.requireTls",
+    "label" : "Require TLS (couchbases://)",
+    "description" : "When set to Required, rejects plaintext couchbase:// connections. Recommended for production and Capella.",
+    "optional" : true,
+    "value" : "false",
+    "group" : "authentication",
+    "binding" : {
+      "name" : "authentication.requireTls",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "replaceDocument",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "Dropdown",
+    "choices" : [ {
+      "name" : "Disabled (development)",
+      "value" : "false"
+    }, {
+      "name" : "Required (production)",
+      "value" : "true"
+    } ]
+  }, {
+    "id" : "upsertDocument:authentication.connectionString",
+    "label" : "Connection String",
+    "description" : "Couchbase connection string. E.g. couchbase://localhost or couchbases://cluster.cloud.couchbase.com",
+    "optional" : false,
+    "constraints" : {
+      "notEmpty" : true
+    },
+    "feel" : "optional",
+    "group" : "authentication",
+    "binding" : {
+      "name" : "authentication.connectionString",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "upsertDocument",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "String"
+  }, {
+    "id" : "upsertDocument:authentication.username",
+    "label" : "Username",
+    "description" : "Couchbase cluster username",
+    "optional" : false,
+    "constraints" : {
+      "notEmpty" : true
+    },
+    "feel" : "optional",
+    "group" : "authentication",
+    "binding" : {
+      "name" : "authentication.username",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "upsertDocument",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "String"
+  }, {
+    "id" : "upsertDocument:authentication.password",
+    "label" : "Password",
+    "description" : "Couchbase cluster password. Use a secret: = secrets.COUCHBASE_PASSWORD",
+    "optional" : false,
+    "constraints" : {
+      "notEmpty" : true
+    },
+    "feel" : "optional",
+    "group" : "authentication",
+    "binding" : {
+      "name" : "authentication.password",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "upsertDocument",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "String"
+  }, {
+    "id" : "upsertDocument:authentication.requireTls",
+    "label" : "Require TLS (couchbases://)",
+    "description" : "When set to Required, rejects plaintext couchbase:// connections. Recommended for production and Capella.",
+    "optional" : true,
+    "value" : "false",
+    "group" : "authentication",
+    "binding" : {
+      "name" : "authentication.requireTls",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "upsertDocument",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "Dropdown",
+    "choices" : [ {
+      "name" : "Disabled (development)",
+      "value" : "false"
+    }, {
+      "name" : "Required (production)",
+      "value" : "true"
+    } ]
+  }, {
+    "id" : "deleteDocument:bucketName",
+    "label" : "Bucket Name",
+    "description" : "Name of the Couchbase bucket",
+    "optional" : false,
+    "constraints" : {
+      "notEmpty" : true
+    },
+    "feel" : "optional",
+    "group" : "document",
+    "binding" : {
+      "name" : "bucketName",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "deleteDocument",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "String"
+  }, {
+    "id" : "deleteDocument:scopeName",
+    "label" : "Scope Name",
+    "description" : "Scope within the bucket (leave blank for _default)",
+    "optional" : true,
+    "value" : "_default",
+    "feel" : "optional",
+    "group" : "document",
+    "binding" : {
+      "name" : "scopeName",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "deleteDocument",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "String"
+  }, {
+    "id" : "deleteDocument:collectionName",
+    "label" : "Collection Name",
+    "description" : "Collection within the scope (leave blank for _default)",
+    "optional" : true,
+    "value" : "_default",
+    "feel" : "optional",
+    "group" : "document",
+    "binding" : {
+      "name" : "collectionName",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "deleteDocument",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "String"
+  }, {
+    "id" : "deleteDocument:documentId",
+    "label" : "Document ID",
+    "description" : "The unique key of the document to delete",
+    "optional" : false,
+    "constraints" : {
+      "notEmpty" : true
+    },
+    "feel" : "optional",
+    "group" : "document",
+    "binding" : {
+      "name" : "documentId",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "deleteDocument",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "String"
+  }, {
+    "id" : "getDocument:bucketName",
+    "label" : "Bucket Name",
+    "description" : "Name of the Couchbase bucket",
+    "optional" : false,
+    "constraints" : {
+      "notEmpty" : true
+    },
+    "feel" : "optional",
+    "group" : "document",
+    "binding" : {
+      "name" : "bucketName",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "getDocument",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "String"
+  }, {
+    "id" : "getDocument:scopeName",
+    "label" : "Scope Name",
+    "description" : "Scope within the bucket (leave blank for _default)",
+    "optional" : true,
+    "value" : "_default",
+    "feel" : "optional",
+    "group" : "document",
+    "binding" : {
+      "name" : "scopeName",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "getDocument",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "String"
+  }, {
+    "id" : "getDocument:collectionName",
+    "label" : "Collection Name",
+    "description" : "Collection within the scope (leave blank for _default)",
+    "optional" : true,
+    "value" : "_default",
+    "feel" : "optional",
+    "group" : "document",
+    "binding" : {
+      "name" : "collectionName",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "getDocument",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "String"
+  }, {
+    "id" : "getDocument:documentId",
+    "label" : "Document ID",
+    "description" : "The unique key of the document to retrieve",
+    "optional" : false,
+    "constraints" : {
+      "notEmpty" : true
+    },
+    "feel" : "optional",
+    "group" : "document",
+    "binding" : {
+      "name" : "documentId",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "getDocument",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "String"
+  }, {
+    "id" : "replaceDocument:bucketName",
+    "label" : "Bucket Name",
+    "description" : "Name of the Couchbase bucket",
+    "optional" : false,
+    "constraints" : {
+      "notEmpty" : true
+    },
+    "feel" : "optional",
+    "group" : "document",
+    "binding" : {
+      "name" : "bucketName",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "replaceDocument",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "String"
+  }, {
+    "id" : "replaceDocument:scopeName",
+    "label" : "Scope Name",
+    "description" : "Scope within the bucket (leave blank for _default)",
+    "optional" : true,
+    "value" : "_default",
+    "feel" : "optional",
+    "group" : "document",
+    "binding" : {
+      "name" : "scopeName",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "replaceDocument",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "String"
+  }, {
+    "id" : "replaceDocument:collectionName",
+    "label" : "Collection Name",
+    "description" : "Collection within the scope (leave blank for _default)",
+    "optional" : true,
+    "value" : "_default",
+    "feel" : "optional",
+    "group" : "document",
+    "binding" : {
+      "name" : "collectionName",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "replaceDocument",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "String"
+  }, {
+    "id" : "replaceDocument:documentId",
+    "label" : "Document ID",
+    "description" : "The unique key of the existing document to replace. Fails if the document does not exist.",
+    "optional" : false,
+    "constraints" : {
+      "notEmpty" : true
+    },
+    "feel" : "optional",
+    "group" : "document",
+    "binding" : {
+      "name" : "documentId",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "replaceDocument",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "String"
+  }, {
+    "id" : "replaceDocument:content",
+    "label" : "Document Content",
+    "description" : "New full document body as a FEEL context (= {\"key\": \"value\"}) or a JSON string. Replaces the entire document.",
+    "optional" : false,
+    "constraints" : {
+      "notEmpty" : true
+    },
+    "feel" : "optional",
+    "group" : "document",
+    "binding" : {
+      "name" : "content",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "replaceDocument",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "Text"
+  }, {
+    "id" : "upsertDocument:bucketName",
+    "label" : "Bucket Name",
+    "description" : "Name of the Couchbase bucket",
+    "optional" : false,
+    "constraints" : {
+      "notEmpty" : true
+    },
+    "feel" : "optional",
+    "group" : "document",
+    "binding" : {
+      "name" : "bucketName",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "upsertDocument",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "String"
+  }, {
+    "id" : "upsertDocument:scopeName",
+    "label" : "Scope Name",
+    "description" : "Scope within the bucket (leave blank for _default)",
+    "optional" : true,
+    "value" : "_default",
+    "feel" : "optional",
+    "group" : "document",
+    "binding" : {
+      "name" : "scopeName",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "upsertDocument",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "String"
+  }, {
+    "id" : "upsertDocument:collectionName",
+    "label" : "Collection Name",
+    "description" : "Collection within the scope (leave blank for _default)",
+    "optional" : true,
+    "value" : "_default",
+    "feel" : "optional",
+    "group" : "document",
+    "binding" : {
+      "name" : "collectionName",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "upsertDocument",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "String"
+  }, {
+    "id" : "upsertDocument:documentId",
+    "label" : "Document ID",
+    "description" : "Unique key for the document. Created if it does not exist, replaced if it does.",
+    "optional" : false,
+    "constraints" : {
+      "notEmpty" : true
+    },
+    "feel" : "optional",
+    "group" : "document",
+    "binding" : {
+      "name" : "documentId",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "upsertDocument",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "String"
+  }, {
+    "id" : "upsertDocument:content",
+    "label" : "Document Content",
+    "description" : "Document body as a FEEL context (= {\"key\": \"value\"}) or a JSON string",
+    "optional" : false,
+    "constraints" : {
+      "notEmpty" : true
+    },
+    "feel" : "optional",
+    "group" : "document",
+    "binding" : {
+      "name" : "content",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "upsertDocument",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "Text"
+  }, {
+    "id" : "query:query",
+    "label" : "N1QL / SQL++ Query",
+    "description" : "The SQL++ (N1QL) query to execute. Use $1, $2 ... for positional parameters.",
+    "optional" : false,
+    "constraints" : {
+      "notEmpty" : true
+    },
+    "feel" : "optional",
+    "group" : "query",
+    "binding" : {
+      "name" : "query",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "query",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "Text"
+  }, {
+    "id" : "query:parameters",
+    "label" : "Positional Parameters",
+    "description" : "Optional ordered list of parameter values, e.g. = [\"value1\", 42]. Maps to $1, $2 in the query.",
+    "optional" : true,
+    "feel" : "optional",
+    "group" : "query",
+    "binding" : {
+      "name" : "parameters",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "query",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "String"
+  }, {
+    "id" : "query:maxRows",
+    "label" : "Max Rows",
+    "description" : "Maximum rows to return. A LIMIT clause is automatically appended if the query has none. Default: 1000.",
+    "optional" : true,
+    "feel" : "static",
+    "group" : "query",
+    "binding" : {
+      "name" : "maxRows",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "query",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "Number"
+  }, {
+    "id" : "query:queryTimeoutSeconds",
+    "label" : "Query Timeout (seconds)",
+    "description" : "Server-side query execution timeout in seconds. Default: 30.",
+    "optional" : true,
+    "feel" : "static",
+    "group" : "query",
+    "binding" : {
+      "name" : "queryTimeoutSeconds",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "query",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "Number"
+  }, {
+    "id" : "query:scanConsistency",
+    "label" : "Scan Consistency",
+    "description" : "NOT_BOUNDED: fastest, may see stale data. REQUEST_PLUS: consistent with all mutations before the request.",
+    "optional" : true,
+    "value" : "NOT_BOUNDED",
+    "group" : "query",
+    "binding" : {
+      "name" : "scanConsistency",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "query",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "Dropdown",
+    "choices" : [ {
+      "name" : "Not Bounded (fastest)",
+      "value" : "NOT_BOUNDED"
+    }, {
+      "name" : "Request Plus (consistent)",
+      "value" : "REQUEST_PLUS"
+    } ]
+  }, {
+    "id" : "query:statementPolicy",
+    "label" : "Statement Policy",
+    "description" : "ANY: all N1QL statements allowed. SELECT_ONLY: restricts to read-only SELECT/WITH statements.",
+    "optional" : true,
+    "value" : "ANY",
+    "group" : "query",
+    "binding" : {
+      "name" : "statementPolicy",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "query",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "Dropdown",
+    "choices" : [ {
+      "name" : "Any statement",
+      "value" : "ANY"
+    }, {
+      "name" : "SELECT only (read-only)",
+      "value" : "SELECT_ONLY"
+    } ]
+  }, {
+    "id" : "operation",
+    "label" : "Operation",
+    "description" : "The operation to execute",
+    "value" : "deleteDocument",
+    "group" : "operation",
+    "binding" : {
+      "key" : "operation",
+      "type" : "zeebe:taskHeader"
+    },
+    "type" : "Dropdown",
+    "choices" : [ {
+      "name" : "Delete Document",
+      "value" : "deleteDocument"
+    }, {
+      "name" : "Execute N1QL Query",
+      "value" : "query"
+    }, {
+      "name" : "Get Document",
+      "value" : "getDocument"
+    }, {
+      "name" : "Replace Document",
+      "value" : "replaceDocument"
+    }, {
+      "name" : "Upsert Document",
+      "value" : "upsertDocument"
+    } ]
+  }, {
+    "id" : "version",
+    "label" : "Version",
+    "description" : "Version of the element template",
+    "value" : "1",
+    "group" : "connector",
+    "binding" : {
+      "key" : "elementTemplateVersion",
+      "type" : "zeebe:taskHeader"
+    },
+    "type" : "Hidden"
+  }, {
+    "id" : "id",
+    "label" : "ID",
+    "description" : "ID of the element template",
+    "value" : "io.camunda.connector.couchbase.v1",
+    "group" : "connector",
+    "binding" : {
+      "key" : "elementTemplateId",
+      "type" : "zeebe:taskHeader"
+    },
+    "type" : "Hidden"
+  }, {
+    "id" : "resultVariable",
+    "label" : "Result variable",
+    "description" : "Name of variable to store the response in",
+    "group" : "output",
+    "binding" : {
+      "key" : "resultVariable",
+      "type" : "zeebe:taskHeader"
+    },
+    "type" : "String"
+  }, {
+    "id" : "resultExpression",
+    "label" : "Result expression",
+    "description" : "Expression to map the response into process variables",
+    "feel" : "required",
+    "group" : "output",
+    "binding" : {
+      "key" : "resultExpression",
+      "type" : "zeebe:taskHeader"
+    },
+    "type" : "Text"
+  }, {
+    "id" : "errorExpression",
+    "label" : "Error expression",
+    "description" : "Expression to handle errors. Details in the <a href=\"https://docs.camunda.io/docs/components/connectors/use-connectors/\" target=\"_blank\">documentation</a>.",
+    "feel" : "required",
+    "group" : "error",
+    "binding" : {
+      "key" : "errorExpression",
+      "type" : "zeebe:taskHeader"
+    },
+    "type" : "Text"
+  }, {
+    "id" : "retryCount",
+    "label" : "Retries",
+    "description" : "Number of retries",
+    "value" : "3",
+    "feel" : "optional",
+    "group" : "retries",
+    "binding" : {
+      "property" : "retries",
+      "type" : "zeebe:taskDefinition"
+    },
+    "type" : "String"
+  }, {
+    "id" : "retryBackoff",
+    "label" : "Retry backoff",
+    "description" : "ISO-8601 duration to wait between retries",
+    "value" : "PT0S",
+    "group" : "retries",
+    "binding" : {
+      "key" : "retryBackoff",
+      "type" : "zeebe:taskHeader"
+    },
+    "type" : "String"
+  } ],
+  "icon" : {
+    "contents" : "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0Ij4KICA8IS0tIENvdWNoYmFzZSByZWQgYmFja2dyb3VuZCBjaXJjbGUgLS0+CiAgPGNpcmNsZSBjeD0iMzIiIGN5PSIzMiIgcj0iMzAiIGZpbGw9IiNFQTIzMjgiLz4KICA8IS0tIERCIGN5bGluZGVyIHRvcCBlbGxpcHNlIC0tPgogIDxlbGxpcHNlIGN4PSIzMiIgY3k9IjIwIiByeD0iMTQiIHJ5PSI1IiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjk1Ii8+CiAgPCEtLSBEQiBjeWxpbmRlciBib2R5IC0tPgogIDxyZWN0IHg9IjE4IiB5PSIyMCIgd2lkdGg9IjI4IiBoZWlnaHQ9IjEwIiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjg1Ii8+CiAgPCEtLSBEQiBjeWxpbmRlciBtaWRkbGUgZWxsaXBzZSAtLT4KICA8ZWxsaXBzZSBjeD0iMzIiIGN5PSIzMCIgcng9IjE0IiByeT0iNSIgZmlsbD0iI2ZmZmZmZiIgb3BhY2l0eT0iMC45NSIvPgogIDwhLS0gREIgY3lsaW5kZXIgYm9keSBsb3dlciAtLT4KICA8cmVjdCB4PSIxOCIgeT0iMzAiIHdpZHRoPSIyOCIgaGVpZ2h0PSIxMCIgZmlsbD0iI2ZmZmZmZiIgb3BhY2l0eT0iMC44NSIvPgogIDwhLS0gREIgY3lsaW5kZXIgYm90dG9tIGVsbGlwc2UgLS0+CiAgPGVsbGlwc2UgY3g9IjMyIiBjeT0iNDAiIHJ4PSIxNCIgcnk9IjUiIGZpbGw9IiNmZmZmZmYiIG9wYWNpdHk9IjAuOTUiLz4KICA8IS0tIENCIHRleHQgLS0+CiAgPHRleHQgeD0iMzIiIHk9IjU2IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSI4IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iI2ZmZmZmZiI+Q0I8L3RleHQ+Cjwvc3ZnPgo="
+  }
+}

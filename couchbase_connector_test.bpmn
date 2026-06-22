@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0nc539q" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.45.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.8.0">
+  <bpmn:collaboration id="Collaboration_0ka5490">
+    <bpmn:participant id="Participant_1nuflxr" processRef="Process_1a4nqlm" />
+    <bpmn:participant id="Participant_04hlj2q" name="Couchbase DB" />
+    <bpmn:messageFlow id="Flow_0t5e5d6" sourceRef="Activity_13jsnui" targetRef="Participant_04hlj2q" />
+    <bpmn:messageFlow id="Flow_1yzhb07" sourceRef="Participant_04hlj2q" targetRef="Activity_0uyw66v" />
+    <bpmn:messageFlow id="Flow_1o28oxr" sourceRef="Activity_03hasdb" targetRef="Participant_04hlj2q" />
+    <bpmn:messageFlow id="Flow_1lu8qwx" sourceRef="Activity_1djatbp" targetRef="Participant_04hlj2q" />
+    <bpmn:messageFlow id="Flow_060m9w9" sourceRef="Activity_0qmcvo5" targetRef="Participant_04hlj2q" />
+    <bpmn:textAnnotation id="TextAnnotation_1g9pwus">
+      <bpmn:text>Insert document</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:textAnnotation id="TextAnnotation_1t869l8">
+      <bpmn:text>Retrieve document</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_0qfekrj" associationDirection="None" sourceRef="Activity_13jsnui" targetRef="TextAnnotation_1g9pwus" />
+    <bpmn:association id="Association_16o1q8e" associationDirection="None" sourceRef="Activity_0uyw66v" targetRef="TextAnnotation_1t869l8" />
+    <bpmn:textAnnotation id="TextAnnotation_1ozha6j">
+      <bpmn:text>Update document</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_1df7pdq" associationDirection="None" sourceRef="Activity_03hasdb" targetRef="TextAnnotation_1ozha6j" />
+    <bpmn:textAnnotation id="TextAnnotation_0xiktla">
+      <bpmn:text>Query document using SQL++ query</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_06w6ud6" associationDirection="None" sourceRef="Activity_1djatbp" targetRef="TextAnnotation_0xiktla" />
+    <bpmn:textAnnotation id="TextAnnotation_1hz0vt1">
+      <bpmn:text>Delete document</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_0nv0rvu" associationDirection="None" sourceRef="Activity_0qmcvo5" targetRef="TextAnnotation_1hz0vt1" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_1a4nqlm" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_0d7fbit</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="Event_0o7luxi">
+      <bpmn:incoming>Flow_1i6xuz6</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="Activity_13jsnui" name="Upsert Document" zeebe:modelerTemplate="io.camunda.connector.couchbase.v1" zeebe:modelerTemplateVersion="1" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0Ij4KICA8IS0tIENvdWNoYmFzZSByZWQgYmFja2dyb3VuZCBjaXJjbGUgLS0+CiAgPGNpcmNsZSBjeD0iMzIiIGN5PSIzMiIgcj0iMzAiIGZpbGw9IiNFQTIzMjgiLz4KICA8IS0tIERCIGN5bGluZGVyIHRvcCBlbGxpcHNlIC0tPgogIDxlbGxpcHNlIGN4PSIzMiIgY3k9IjIwIiByeD0iMTQiIHJ5PSI1IiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjk1Ii8+CiAgPCEtLSBEQiBjeWxpbmRlciBib2R5IC0tPgogIDxyZWN0IHg9IjE4IiB5PSIyMCIgd2lkdGg9IjI4IiBoZWlnaHQ9IjEwIiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjg1Ii8+CiAgPCEtLSBEQiBjeWxpbmRlciBtaWRkbGUgZWxsaXBzZSAtLT4KICA8ZWxsaXBzZSBjeD0iMzIiIGN5PSIzMCIgcng9IjE0IiByeT0iNSIgZmlsbD0iI2ZmZmZmZiIgb3BhY2l0eT0iMC45NSIvPgogIDwhLS0gREIgY3lsaW5kZXIgYm9keSBsb3dlciAtLT4KICA8cmVjdCB4PSIxOCIgeT0iMzAiIHdpZHRoPSIyOCIgaGVpZ2h0PSIxMCIgZmlsbD0iI2ZmZmZmZiIgb3BhY2l0eT0iMC44NSIvPgogIDwhLS0gREIgY3lsaW5kZXIgYm90dG9tIGVsbGlwc2UgLS0+CiAgPGVsbGlwc2UgY3g9IjMyIiBjeT0iNDAiIHJ4PSIxNCIgcnk9IjUiIGZpbGw9IiNmZmZmZmYiIG9wYWNpdHk9IjAuOTUiLz4KICA8IS0tIENCIHRleHQgLS0+CiAgPHRleHQgeD0iMzIiIHk9IjU2IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSI4IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iI2ZmZmZmZiI+Q0I8L3RleHQ+Cjwvc3ZnPgo=">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="io.camunda:couchbase:1" retries="3" />
+        <zeebe:taskHeaders>
+          <zeebe:header key="operation" value="upsertDocument" />
+          <zeebe:header key="elementTemplateVersion" value="1" />
+          <zeebe:header key="elementTemplateId" value="io.camunda.connector.couchbase.v1" />
+          <zeebe:header key="resultVariable" value="upsert" />
+          <zeebe:header key="retryBackoff" value="PT0S" />
+        </zeebe:taskHeaders>
+        <zeebe:ioMapping>
+          <zeebe:input source="couchbase://localhost" target="authentication.connectionString" />
+          <zeebe:input source="Administrator" target="authentication.username" />
+          <zeebe:input source="Password123!" target="authentication.password" />
+          <zeebe:input source="demo" target="bucketName" />
+          <zeebe:input source="_default" target="scopeName" />
+          <zeebe:input source="orders" target="collectionName" />
+          <zeebe:input source="=order_id" target="documentId" />
+          <zeebe:input source="={&#10;  &#34;orderId&#34;: order_id,&#10;  &#34;customerId&#34;: customer_id,&#10;  &#34;orderDate&#34;: now(),&#10;  &#34;status&#34;: &#34;New&#34;,&#10;  &#34;qty&#34;: qty&#10;}" target="content" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0d7fbit</bpmn:incoming>
+      <bpmn:outgoing>Flow_0sgl4px</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_0uyw66v" name="Get Document" zeebe:modelerTemplate="io.camunda.connector.couchbase.v1" zeebe:modelerTemplateVersion="1" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0Ij4KICA8IS0tIENvdWNoYmFzZSByZWQgYmFja2dyb3VuZCBjaXJjbGUgLS0+CiAgPGNpcmNsZSBjeD0iMzIiIGN5PSIzMiIgcj0iMzAiIGZpbGw9IiNFQTIzMjgiLz4KICA8IS0tIERCIGN5bGluZGVyIHRvcCBlbGxpcHNlIC0tPgogIDxlbGxpcHNlIGN4PSIzMiIgY3k9IjIwIiByeD0iMTQiIHJ5PSI1IiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjk1Ii8+CiAgPCEtLSBEQiBjeWxpbmRlciBib2R5IC0tPgogIDxyZWN0IHg9IjE4IiB5PSIyMCIgd2lkdGg9IjI4IiBoZWlnaHQ9IjEwIiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjg1Ii8+CiAgPCEtLSBEQiBjeWxpbmRlciBtaWRkbGUgZWxsaXBzZSAtLT4KICA8ZWxsaXBzZSBjeD0iMzIiIGN5PSIzMCIgcng9IjE0IiByeT0iNSIgZmlsbD0iI2ZmZmZmZiIgb3BhY2l0eT0iMC45NSIvPgogIDwhLS0gREIgY3lsaW5kZXIgYm9keSBsb3dlciAtLT4KICA8cmVjdCB4PSIxOCIgeT0iMzAiIHdpZHRoPSIyOCIgaGVpZ2h0PSIxMCIgZmlsbD0iI2ZmZmZmZiIgb3BhY2l0eT0iMC44NSIvPgogIDwhLS0gREIgY3lsaW5kZXIgYm90dG9tIGVsbGlwc2UgLS0+CiAgPGVsbGlwc2UgY3g9IjMyIiBjeT0iNDAiIHJ4PSIxNCIgcnk9IjUiIGZpbGw9IiNmZmZmZmYiIG9wYWNpdHk9IjAuOTUiLz4KICA8IS0tIENCIHRleHQgLS0+CiAgPHRleHQgeD0iMzIiIHk9IjU2IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSI4IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iI2ZmZmZmZiI+Q0I8L3RleHQ+Cjwvc3ZnPgo=">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="io.camunda:couchbase:1" retries="3" />
+        <zeebe:taskHeaders>
+          <zeebe:header key="operation" value="getDocument" />
+          <zeebe:header key="elementTemplateVersion" value="1" />
+          <zeebe:header key="elementTemplateId" value="io.camunda.connector.couchbase.v1" />
+          <zeebe:header key="resultVariable" value="get" />
+          <zeebe:header key="retryBackoff" value="PT0S" />
+        </zeebe:taskHeaders>
+        <zeebe:ioMapping>
+          <zeebe:input source="couchbase://localhost" target="authentication.connectionString" />
+          <zeebe:input source="Administrator" target="authentication.username" />
+          <zeebe:input source="Password123!" target="authentication.password" />
+          <zeebe:input source="demo" target="bucketName" />
+          <zeebe:input source="_default" target="scopeName" />
+          <zeebe:input source="orders" target="collectionName" />
+          <zeebe:input source="=order_id" target="documentId" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0sgl4px</bpmn:incoming>
+      <bpmn:outgoing>Flow_0vidn58</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_03hasdb" name="Update Document" zeebe:modelerTemplate="io.camunda.connector.couchbase.v1" zeebe:modelerTemplateVersion="1" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0Ij4KICA8IS0tIENvdWNoYmFzZSByZWQgYmFja2dyb3VuZCBjaXJjbGUgLS0+CiAgPGNpcmNsZSBjeD0iMzIiIGN5PSIzMiIgcj0iMzAiIGZpbGw9IiNFQTIzMjgiLz4KICA8IS0tIERCIGN5bGluZGVyIHRvcCBlbGxpcHNlIC0tPgogIDxlbGxpcHNlIGN4PSIzMiIgY3k9IjIwIiByeD0iMTQiIHJ5PSI1IiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjk1Ii8+CiAgPCEtLSBEQiBjeWxpbmRlciBib2R5IC0tPgogIDxyZWN0IHg9IjE4IiB5PSIyMCIgd2lkdGg9IjI4IiBoZWlnaHQ9IjEwIiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjg1Ii8+CiAgPCEtLSBEQiBjeWxpbmRlciBtaWRkbGUgZWxsaXBzZSAtLT4KICA8ZWxsaXBzZSBjeD0iMzIiIGN5PSIzMCIgcng9IjE0IiByeT0iNSIgZmlsbD0iI2ZmZmZmZiIgb3BhY2l0eT0iMC45NSIvPgogIDwhLS0gREIgY3lsaW5kZXIgYm9keSBsb3dlciAtLT4KICA8cmVjdCB4PSIxOCIgeT0iMzAiIHdpZHRoPSIyOCIgaGVpZ2h0PSIxMCIgZmlsbD0iI2ZmZmZmZiIgb3BhY2l0eT0iMC44NSIvPgogIDwhLS0gREIgY3lsaW5kZXIgYm90dG9tIGVsbGlwc2UgLS0+CiAgPGVsbGlwc2UgY3g9IjMyIiBjeT0iNDAiIHJ4PSIxNCIgcnk9IjUiIGZpbGw9IiNmZmZmZmYiIG9wYWNpdHk9IjAuOTUiLz4KICA8IS0tIENCIHRleHQgLS0+CiAgPHRleHQgeD0iMzIiIHk9IjU2IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSI4IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iI2ZmZmZmZiI+Q0I8L3RleHQ+Cjwvc3ZnPgo=">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="io.camunda:couchbase:1" retries="3" />
+        <zeebe:taskHeaders>
+          <zeebe:header key="operation" value="replaceDocument" />
+          <zeebe:header key="elementTemplateVersion" value="1" />
+          <zeebe:header key="elementTemplateId" value="io.camunda.connector.couchbase.v1" />
+          <zeebe:header key="resultVariable" value="update" />
+          <zeebe:header key="retryBackoff" value="PT0S" />
+        </zeebe:taskHeaders>
+        <zeebe:ioMapping>
+          <zeebe:input source="couchbase://localhost" target="authentication.connectionString" />
+          <zeebe:input source="Administrator" target="authentication.username" />
+          <zeebe:input source="Password123!" target="authentication.password" />
+          <zeebe:input source="demo" target="bucketName" />
+          <zeebe:input source="_default" target="scopeName" />
+          <zeebe:input source="orders" target="collectionName" />
+          <zeebe:input source="=order_id" target="documentId" />
+          <zeebe:input source="={&#10;  &#34;status&#34;: &#34;Processed&#34;&#10;}" target="content" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0vidn58</bpmn:incoming>
+      <bpmn:outgoing>Flow_1eq8e6h</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_1djatbp" name="Query Document" zeebe:modelerTemplate="io.camunda.connector.couchbase.v1" zeebe:modelerTemplateVersion="1" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0Ij4KICA8IS0tIENvdWNoYmFzZSByZWQgYmFja2dyb3VuZCBjaXJjbGUgLS0+CiAgPGNpcmNsZSBjeD0iMzIiIGN5PSIzMiIgcj0iMzAiIGZpbGw9IiNFQTIzMjgiLz4KICA8IS0tIERCIGN5bGluZGVyIHRvcCBlbGxpcHNlIC0tPgogIDxlbGxpcHNlIGN4PSIzMiIgY3k9IjIwIiByeD0iMTQiIHJ5PSI1IiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjk1Ii8+CiAgPCEtLSBEQiBjeWxpbmRlciBib2R5IC0tPgogIDxyZWN0IHg9IjE4IiB5PSIyMCIgd2lkdGg9IjI4IiBoZWlnaHQ9IjEwIiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjg1Ii8+CiAgPCEtLSBEQiBjeWxpbmRlciBtaWRkbGUgZWxsaXBzZSAtLT4KICA8ZWxsaXBzZSBjeD0iMzIiIGN5PSIzMCIgcng9IjE0IiByeT0iNSIgZmlsbD0iI2ZmZmZmZiIgb3BhY2l0eT0iMC45NSIvPgogIDwhLS0gREIgY3lsaW5kZXIgYm9keSBsb3dlciAtLT4KICA8cmVjdCB4PSIxOCIgeT0iMzAiIHdpZHRoPSIyOCIgaGVpZ2h0PSIxMCIgZmlsbD0iI2ZmZmZmZiIgb3BhY2l0eT0iMC44NSIvPgogIDwhLS0gREIgY3lsaW5kZXIgYm90dG9tIGVsbGlwc2UgLS0+CiAgPGVsbGlwc2UgY3g9IjMyIiBjeT0iNDAiIHJ4PSIxNCIgcnk9IjUiIGZpbGw9IiNmZmZmZmYiIG9wYWNpdHk9IjAuOTUiLz4KICA8IS0tIENCIHRleHQgLS0+CiAgPHRleHQgeD0iMzIiIHk9IjU2IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSI4IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iI2ZmZmZmZiI+Q0I8L3RleHQ+Cjwvc3ZnPgo=">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="io.camunda:couchbase:1" retries="3" />
+        <zeebe:taskHeaders>
+          <zeebe:header key="operation" value="query" />
+          <zeebe:header key="elementTemplateVersion" value="1" />
+          <zeebe:header key="elementTemplateId" value="io.camunda.connector.couchbase.v1" />
+          <zeebe:header key="resultVariable" value="exeQuery" />
+          <zeebe:header key="retryBackoff" value="PT0S" />
+        </zeebe:taskHeaders>
+        <zeebe:ioMapping>
+          <zeebe:input source="couchbase://localhost" target="authentication.connectionString" />
+          <zeebe:input source="Administrator" target="authentication.username" />
+          <zeebe:input source="Password123!" target="authentication.password" />
+          <zeebe:input source="SELECT orderId, customerId, qty, orderDate&#10;FROM `demo`.`_default`.`orders`" target="query" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1eq8e6h</bpmn:incoming>
+      <bpmn:outgoing>Flow_07scfbc</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_0qmcvo5" name="Delete Document" zeebe:modelerTemplate="io.camunda.connector.couchbase.v1" zeebe:modelerTemplateVersion="1" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0Ij4KICA8IS0tIENvdWNoYmFzZSByZWQgYmFja2dyb3VuZCBjaXJjbGUgLS0+CiAgPGNpcmNsZSBjeD0iMzIiIGN5PSIzMiIgcj0iMzAiIGZpbGw9IiNFQTIzMjgiLz4KICA8IS0tIERCIGN5bGluZGVyIHRvcCBlbGxpcHNlIC0tPgogIDxlbGxpcHNlIGN4PSIzMiIgY3k9IjIwIiByeD0iMTQiIHJ5PSI1IiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjk1Ii8+CiAgPCEtLSBEQiBjeWxpbmRlciBib2R5IC0tPgogIDxyZWN0IHg9IjE4IiB5PSIyMCIgd2lkdGg9IjI4IiBoZWlnaHQ9IjEwIiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjg1Ii8+CiAgPCEtLSBEQiBjeWxpbmRlciBtaWRkbGUgZWxsaXBzZSAtLT4KICA8ZWxsaXBzZSBjeD0iMzIiIGN5PSIzMCIgcng9IjE0IiByeT0iNSIgZmlsbD0iI2ZmZmZmZiIgb3BhY2l0eT0iMC45NSIvPgogIDwhLS0gREIgY3lsaW5kZXIgYm9keSBsb3dlciAtLT4KICA8cmVjdCB4PSIxOCIgeT0iMzAiIHdpZHRoPSIyOCIgaGVpZ2h0PSIxMCIgZmlsbD0iI2ZmZmZmZiIgb3BhY2l0eT0iMC44NSIvPgogIDwhLS0gREIgY3lsaW5kZXIgYm90dG9tIGVsbGlwc2UgLS0+CiAgPGVsbGlwc2UgY3g9IjMyIiBjeT0iNDAiIHJ4PSIxNCIgcnk9IjUiIGZpbGw9IiNmZmZmZmYiIG9wYWNpdHk9IjAuOTUiLz4KICA8IS0tIENCIHRleHQgLS0+CiAgPHRleHQgeD0iMzIiIHk9IjU2IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSI4IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iI2ZmZmZmZiI+Q0I8L3RleHQ+Cjwvc3ZnPgo=">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="io.camunda:couchbase:1" retries="3" />
+        <zeebe:taskHeaders>
+          <zeebe:header key="operation" value="deleteDocument" />
+          <zeebe:header key="elementTemplateVersion" value="1" />
+          <zeebe:header key="elementTemplateId" value="io.camunda.connector.couchbase.v1" />
+          <zeebe:header key="resultVariable" value="delete" />
+          <zeebe:header key="retryBackoff" value="PT0S" />
+        </zeebe:taskHeaders>
+        <zeebe:ioMapping>
+          <zeebe:input source="couchbase://localhost" target="authentication.connectionString" />
+          <zeebe:input source="Administrator" target="authentication.username" />
+          <zeebe:input source="Password123!" target="authentication.password" />
+          <zeebe:input source="demo" target="bucketName" />
+          <zeebe:input source="_default" target="scopeName" />
+          <zeebe:input source="orders" target="collectionName" />
+          <zeebe:input source="=order_id" target="documentId" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_07scfbc</bpmn:incoming>
+      <bpmn:outgoing>Flow_1i6xuz6</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0d7fbit" sourceRef="StartEvent_1" targetRef="Activity_13jsnui" />
+    <bpmn:sequenceFlow id="Flow_1i6xuz6" sourceRef="Activity_0qmcvo5" targetRef="Event_0o7luxi" />
+    <bpmn:sequenceFlow id="Flow_0sgl4px" sourceRef="Activity_13jsnui" targetRef="Activity_0uyw66v" />
+    <bpmn:sequenceFlow id="Flow_0vidn58" sourceRef="Activity_0uyw66v" targetRef="Activity_03hasdb" />
+    <bpmn:sequenceFlow id="Flow_1eq8e6h" sourceRef="Activity_03hasdb" targetRef="Activity_1djatbp" />
+    <bpmn:sequenceFlow id="Flow_07scfbc" sourceRef="Activity_1djatbp" targetRef="Activity_0qmcvo5" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0ka5490">
+      <bpmndi:BPMNShape id="Participant_1nuflxr_di" bpmnElement="Participant_1nuflxr" isHorizontal="true">
+        <dc:Bounds x="130" y="90" width="930" height="250" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="182" y="182" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0o7luxi_di" bpmnElement="Event_0o7luxi">
+        <dc:Bounds x="1002" y="182" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1qajaos_di" bpmnElement="Activity_13jsnui">
+        <dc:Bounds x="270" y="160" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_06we7vt" bpmnElement="Activity_0uyw66v">
+        <dc:Bounds x="420" y="160" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1208ya2" bpmnElement="Activity_03hasdb">
+        <dc:Bounds x="570" y="160" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0r8rth5" bpmnElement="Activity_1djatbp">
+        <dc:Bounds x="720" y="160" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0tx55iy" bpmnElement="Activity_0qmcvo5">
+        <dc:Bounds x="860" y="160" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0d7fbit_di" bpmnElement="Flow_0d7fbit">
+        <di:waypoint x="218" y="200" />
+        <di:waypoint x="270" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1i6xuz6_di" bpmnElement="Flow_1i6xuz6">
+        <di:waypoint x="960" y="200" />
+        <di:waypoint x="1002" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0sgl4px_di" bpmnElement="Flow_0sgl4px">
+        <di:waypoint x="370" y="200" />
+        <di:waypoint x="420" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0vidn58_di" bpmnElement="Flow_0vidn58">
+        <di:waypoint x="520" y="200" />
+        <di:waypoint x="570" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1eq8e6h_di" bpmnElement="Flow_1eq8e6h">
+        <di:waypoint x="670" y="200" />
+        <di:waypoint x="720" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_07scfbc_di" bpmnElement="Flow_07scfbc">
+        <di:waypoint x="820" y="200" />
+        <di:waypoint x="860" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Participant_04hlj2q_di" bpmnElement="Participant_04hlj2q" isHorizontal="true">
+        <dc:Bounds x="130" y="420" width="930" height="60" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_0nv0rvu_di" bpmnElement="Association_0nv0rvu">
+        <di:waypoint x="933" y="240" />
+        <di:waypoint x="1001" y="360" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_06w6ud6_di" bpmnElement="Association_06w6ud6">
+        <di:waypoint x="787" y="240" />
+        <di:waypoint x="834" y="353" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_1df7pdq_di" bpmnElement="Association_1df7pdq">
+        <di:waypoint x="638" y="240" />
+        <di:waypoint x="693" y="360" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_16o1q8e_di" bpmnElement="Association_16o1q8e">
+        <di:waypoint x="489" y="240" />
+        <di:waypoint x="543" y="353" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0qfekrj_di" bpmnElement="Association_0qfekrj">
+        <di:waypoint x="339" y="240" />
+        <di:waypoint x="393" y="353" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0t5e5d6_di" bpmnElement="Flow_0t5e5d6">
+        <di:waypoint x="320" y="240" />
+        <di:waypoint x="320" y="420" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1yzhb07_di" bpmnElement="Flow_1yzhb07">
+        <di:waypoint x="470" y="420" />
+        <di:waypoint x="470" y="240" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1o28oxr_di" bpmnElement="Flow_1o28oxr">
+        <di:waypoint x="620" y="240" />
+        <di:waypoint x="620" y="420" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1lu8qwx_di" bpmnElement="Flow_1lu8qwx">
+        <di:waypoint x="770" y="240" />
+        <di:waypoint x="770" y="420" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_060m9w9_di" bpmnElement="Flow_060m9w9">
+        <di:waypoint x="910" y="240" />
+        <di:waypoint x="910" y="420" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_1hz0vt1_di" bpmnElement="TextAnnotation_1hz0vt1">
+        <dc:Bounds x="960" y="360" width="100" height="41" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_0xiktla_di" bpmnElement="TextAnnotation_0xiktla">
+        <dc:Bounds x="790" y="353" width="100" height="55" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1ozha6j_di" bpmnElement="TextAnnotation_1ozha6j">
+        <dc:Bounds x="650" y="360" width="100" height="41" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1t869l8_di" bpmnElement="TextAnnotation_1t869l8">
+        <dc:Bounds x="500" y="353" width="100" height="41" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1g9pwus_di" bpmnElement="TextAnnotation_1g9pwus">
+        <dc:Bounds x="350" y="353" width="100" height="41" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
