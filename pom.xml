@@ -4,9 +4,16 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
+  <parent>
+    <groupId>org.camunda.community</groupId>
+    <artifactId>community-hub-release-parent</artifactId>
+    <version>2.1.0</version>
+    <relativePath />
+  </parent>
+
   <name>connector-couchbase</name>
   <description>Camunda 8 Custom Connector for Couchbase DB — Get, Upsert, Replace, Delete, and N1QL Query operations</description>
-  <groupId>io.camunda.connector</groupId>
+  <groupId>org.camunda.community</groupId>
   <artifactId>connector-couchbase</artifactId>
   <packaging>jar</packaging>
   <version>1.0.0-SNAPSHOT</version>
@@ -99,6 +106,13 @@
       <groupId>org.mockito</groupId>
       <artifactId>mockito-junit-jupiter</artifactId>
       <version>${version.mockito}</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- Local connector runtime — run LocalConnectorRuntime.main() from IDE to test against a live cluster -->
+    <dependency>
+      <groupId>io.camunda.connector</groupId>
+      <artifactId>connector-runtime-local</artifactId>
+      <version>${version.connectors}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

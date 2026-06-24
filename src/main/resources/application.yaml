@@ -1,0 +1,18 @@
+# ── Local Camunda 8 Run ──────────────────────────────────────────────────────
+# Start Camunda 8 Run first, then run LocalConnectorRuntime.main() from your IDE
+camunda:
+  client:
+    mode: simple
+    zeebe:
+      grpc-address: http://localhost:26500
+      rest-address: http://localhost:8080
+
+# ── SaaS (comment out the block above, uncomment below) ─────────────────────
+#camunda:
+#  client:
+#    mode: saas
+#    auth:
+#      client-id: <your-client-id>
+#      client-secret: <your-client-secret>
+#    cluster-id: <your-cluster-id>
+#    region: <your-region>

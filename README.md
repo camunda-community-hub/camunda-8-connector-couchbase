@@ -1,3 +1,6 @@
+[![Community badge: Incubating](https://img.shields.io/badge/Lifecycle-Incubating-blue)](https://github.com/Camunda-Community-Hub/community/blob/main/extension-lifecycle.md#incubating-)
+[![Community extension badge](https://img.shields.io/badge/Community%20Extension-An%20open%20source%20community%20maintained%20project-FF4700)](https://github.com/camunda-community-hub/community)
+![Compatible with: Camunda 8](https://img.shields.io/badge/Compatible%20with-Camunda%208-0072Ce)
 # Couchbase DB Connector for Camunda 8
 
 A custom [Camunda 8 outbound connector](https://docs.camunda.io/docs/components/connectors/custom-built-connectors/connector-sdk/) that integrates with [Couchbase](https://www.couchbase.com) — Community, Enterprise, and Capella — directly from a BPMN process. Perform document key-value operations and execute N1QL/SQL++ queries without writing a custom job worker.
@@ -19,7 +22,7 @@ A custom [Camunda 8 outbound connector](https://docs.camunda.io/docs/components/
 
 ## Example
 
-![Couchbase DB Connector in Camunda Desktop Modeler](example.png)
+![Couchbase DB Connector in Camunda Desktop Modeler](doc/example.png)
 
 *Left: a BPMN process exercising all five operations. Right: the connector properties panel in Camunda Desktop Modeler showing an Upsert Document task configured with bucket, scope, collection, and document content.*
 
@@ -503,3 +506,15 @@ couchbase://localhost
 - [Camunda Connector SDK](https://docs.camunda.io/docs/components/connectors/custom-built-connectors/connector-sdk/)
 - [Camunda — Host custom connectors](https://docs.camunda.io/docs/components/connectors/custom-built-connectors/host-custom-connectors/)
 - [Camunda — Use connectors in hybrid mode](https://docs.camunda.io/docs/guides/use-connectors-in-hybrid-mode/)
+
+---
+
+## Contributing
+
+Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to report bugs, suggest features, and submit pull requests.
+
+---
+
+## License
+
+This project is licensed under the [Apache License 2.0](LICENSE).
