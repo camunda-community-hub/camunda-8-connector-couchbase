@@ -111,7 +111,7 @@
     <!-- Local connector runtime — run LocalConnectorRuntime.main() from IDE to test against a live cluster -->
     <dependency>
       <groupId>io.camunda.connector</groupId>
-      <artifactId>connector-runtime-local</artifactId>
+      <artifactId>spring-boot-starter-camunda-connectors</artifactId>
       <version>${version.connectors}</version>
       <scope>test</scope>
     </dependency>
@@ -127,6 +127,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
+        <version>3.6.0</version>
         <executions>
           <execution>
             <phase>package</phase>

@@ -39,7 +39,7 @@ public record UpsertDocumentRequest(
 
     @NotEmpty
     @TemplateProperty(
-        group = "document",
+        group = "operation",
         label = "Document ID",
         description = "Unique key for the document. Created if it does not exist, replaced if it does."
     )
@@ -47,7 +47,7 @@ public record UpsertDocumentRequest(
 
     @NotNull
     @TemplateProperty(
-        group = "document",
+        group = "operation",
         label = "Document Content",
         description = "Document body as a FEEL context (= {\"key\": \"value\"}) or a JSON string",
         type = PropertyType.Text

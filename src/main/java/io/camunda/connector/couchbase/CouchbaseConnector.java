@@ -46,6 +46,7 @@ import org.slf4j.LoggerFactory;
     propertyGroups = {
         @PropertyGroup(id = "authentication", label = "Authentication"),
         @PropertyGroup(id = "document",       label = "Document Settings"),
+        @PropertyGroup(id = "operation",      label = "Operation"),
         @PropertyGroup(id = "query",          label = "Query Settings")
     }
 )

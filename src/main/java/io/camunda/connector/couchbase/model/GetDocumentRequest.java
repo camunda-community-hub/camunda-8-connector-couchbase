@@ -38,7 +38,7 @@ public record GetDocumentRequest(
 
     @NotEmpty
     @TemplateProperty(
-        group = "document",
+        group = "operation",
         label = "Document ID",
         description = "The unique key of the document to retrieve"
     )

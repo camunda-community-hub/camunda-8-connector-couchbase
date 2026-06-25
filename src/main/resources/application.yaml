@@ -1,13 +1,29 @@
-# ── Local Camunda 8 Run ──────────────────────────────────────────────────────
-# Start Camunda 8 Run first, then run LocalConnectorRuntime.main() from your IDE
+
 camunda:
   client:
-    mode: simple
-    zeebe:
-      grpc-address: http://localhost:26500
-      rest-address: http://localhost:8080
+    mode: self-managed
+    # --- AKS cluster (direct HTTPS — no k9s port-forward needed) ---
+    grpc-address: https://camunda.local
+    rest-address: https://camunda.local/orchestration
+    tenant-id: "<default>"
+    security:
+      enabled: true
+    auth:
+      method: oidc
+      client-id: orchestration
+      client-secret: demo
+      issuer-url: https://camunda.local/auth/realms/camunda-platform
+      audience: orchestration
 
-# ── SaaS (comment out the block above, uncomment below) ─────────────────────
+# ── Local Camunda 8 Run ──────────────────────────────────────────────────────
+#camunda:
+#  client:
+#    mode: simple
+#    zeebe:
+#      grpc-address: http://localhost:26500
+#      rest-address: http://localhost:8080
+
+# ── SaaS ─────────────────────────────────────────────────────────────────────
 #camunda:
 #  client:
 #    mode: saas

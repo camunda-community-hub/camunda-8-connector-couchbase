@@ -39,7 +39,7 @@ public record ReplaceDocumentRequest(
 
     @NotEmpty
     @TemplateProperty(
-        group = "document",
+        group = "operation",
         label = "Document ID",
         description = "The unique key of the existing document to replace. Fails if the document does not exist."
     )
@@ -47,7 +47,7 @@ public record ReplaceDocumentRequest(
 
     @NotNull
     @TemplateProperty(
-        group = "document",
+        group = "operation",
         label = "Document Content",
         description = "New full document body as a FEEL context (= {\"key\": \"value\"}) or a JSON string. Replaces the entire document.",
         type = PropertyType.Text

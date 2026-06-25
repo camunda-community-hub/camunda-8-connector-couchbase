@@ -23,11 +23,11 @@
     "id" : "document",
     "label" : "Document Settings"
   }, {
-    "id" : "query",
-    "label" : "Query Settings"
-  }, {
     "id" : "operation",
     "label" : "Operation"
+  }, {
+    "id" : "query",
+    "label" : "Query Settings"
   }, {
     "id" : "connector",
     "label" : "Connector"
@@ -571,28 +571,6 @@
     },
     "type" : "String"
   }, {
-    "id" : "deleteDocument:documentId",
-    "label" : "Document ID",
-    "description" : "The unique key of the document to delete",
-    "optional" : false,
-    "constraints" : {
-      "notEmpty" : true
-    },
-    "feel" : "optional",
-    "group" : "document",
-    "binding" : {
-      "name" : "documentId",
-      "type" : "zeebe:input"
-    },
-    "condition" : {
-      "allMatch" : [ {
-        "property" : "operation",
-        "equals" : "deleteDocument",
-        "type" : "simple"
-      } ]
-    },
-    "type" : "String"
-  }, {
     "id" : "getDocument:bucketName",
     "label" : "Bucket Name",
     "description" : "Name of the Couchbase bucket",
@@ -644,28 +622,6 @@
     "group" : "document",
     "binding" : {
       "name" : "collectionName",
-      "type" : "zeebe:input"
-    },
-    "condition" : {
-      "allMatch" : [ {
-        "property" : "operation",
-        "equals" : "getDocument",
-        "type" : "simple"
-      } ]
-    },
-    "type" : "String"
-  }, {
-    "id" : "getDocument:documentId",
-    "label" : "Document ID",
-    "description" : "The unique key of the document to retrieve",
-    "optional" : false,
-    "constraints" : {
-      "notEmpty" : true
-    },
-    "feel" : "optional",
-    "group" : "document",
-    "binding" : {
-      "name" : "documentId",
       "type" : "zeebe:input"
     },
     "condition" : {
@@ -739,50 +695,6 @@
     },
     "type" : "String"
   }, {
-    "id" : "replaceDocument:documentId",
-    "label" : "Document ID",
-    "description" : "The unique key of the existing document to replace. Fails if the document does not exist.",
-    "optional" : false,
-    "constraints" : {
-      "notEmpty" : true
-    },
-    "feel" : "optional",
-    "group" : "document",
-    "binding" : {
-      "name" : "documentId",
-      "type" : "zeebe:input"
-    },
-    "condition" : {
-      "allMatch" : [ {
-        "property" : "operation",
-        "equals" : "replaceDocument",
-        "type" : "simple"
-      } ]
-    },
-    "type" : "String"
-  }, {
-    "id" : "replaceDocument:content",
-    "label" : "Document Content",
-    "description" : "New full document body as a FEEL context (= {\"key\": \"value\"}) or a JSON string. Replaces the entire document.",
-    "optional" : false,
-    "constraints" : {
-      "notEmpty" : true
-    },
-    "feel" : "optional",
-    "group" : "document",
-    "binding" : {
-      "name" : "content",
-      "type" : "zeebe:input"
-    },
-    "condition" : {
-      "allMatch" : [ {
-        "property" : "operation",
-        "equals" : "replaceDocument",
-        "type" : "simple"
-      } ]
-    },
-    "type" : "Text"
-  }, {
     "id" : "upsertDocument:bucketName",
     "label" : "Bucket Name",
     "description" : "Name of the Couchbase bucket",
@@ -845,6 +757,121 @@
     },
     "type" : "String"
   }, {
+    "id" : "operation",
+    "label" : "Operation",
+    "description" : "The operation to execute",
+    "value" : "deleteDocument",
+    "group" : "operation",
+    "binding" : {
+      "key" : "operation",
+      "type" : "zeebe:taskHeader"
+    },
+    "type" : "Dropdown",
+    "choices" : [ {
+      "name" : "Delete Document",
+      "value" : "deleteDocument"
+    }, {
+      "name" : "Execute N1QL Query",
+      "value" : "query"
+    }, {
+      "name" : "Get Document",
+      "value" : "getDocument"
+    }, {
+      "name" : "Replace Document",
+      "value" : "replaceDocument"
+    }, {
+      "name" : "Upsert Document",
+      "value" : "upsertDocument"
+    } ]
+  }, {
+    "id" : "deleteDocument:documentId",
+    "label" : "Document ID",
+    "description" : "The unique key of the document to delete",
+    "optional" : false,
+    "constraints" : {
+      "notEmpty" : true
+    },
+    "feel" : "optional",
+    "group" : "operation",
+    "binding" : {
+      "name" : "documentId",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "deleteDocument",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "String"
+  }, {
+    "id" : "getDocument:documentId",
+    "label" : "Document ID",
+    "description" : "The unique key of the document to retrieve",
+    "optional" : false,
+    "constraints" : {
+      "notEmpty" : true
+    },
+    "feel" : "optional",
+    "group" : "operation",
+    "binding" : {
+      "name" : "documentId",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "getDocument",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "String"
+  }, {
+    "id" : "replaceDocument:documentId",
+    "label" : "Document ID",
+    "description" : "The unique key of the existing document to replace. Fails if the document does not exist.",
+    "optional" : false,
+    "constraints" : {
+      "notEmpty" : true
+    },
+    "feel" : "optional",
+    "group" : "operation",
+    "binding" : {
+      "name" : "documentId",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "replaceDocument",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "String"
+  }, {
+    "id" : "replaceDocument:content",
+    "label" : "Document Content",
+    "description" : "New full document body as a FEEL context (= {\"key\": \"value\"}) or a JSON string. Replaces the entire document.",
+    "optional" : false,
+    "constraints" : {
+      "notEmpty" : true
+    },
+    "feel" : "optional",
+    "group" : "operation",
+    "binding" : {
+      "name" : "content",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "allMatch" : [ {
+        "property" : "operation",
+        "equals" : "replaceDocument",
+        "type" : "simple"
+      } ]
+    },
+    "type" : "Text"
+  }, {
     "id" : "upsertDocument:documentId",
     "label" : "Document ID",
     "description" : "Unique key for the document. Created if it does not exist, replaced if it does.",
@@ -853,7 +880,7 @@
       "notEmpty" : true
     },
     "feel" : "optional",
-    "group" : "document",
+    "group" : "operation",
     "binding" : {
       "name" : "documentId",
       "type" : "zeebe:input"
@@ -875,7 +902,7 @@
       "notEmpty" : true
     },
     "feel" : "optional",
-    "group" : "document",
+    "group" : "operation",
     "binding" : {
       "name" : "content",
       "type" : "zeebe:input"
@@ -1018,33 +1045,6 @@
     }, {
       "name" : "SELECT only (read-only)",
       "value" : "SELECT_ONLY"
-    } ]
-  }, {
-    "id" : "operation",
-    "label" : "Operation",
-    "description" : "The operation to execute",
-    "value" : "deleteDocument",
-    "group" : "operation",
-    "binding" : {
-      "key" : "operation",
-      "type" : "zeebe:taskHeader"
-    },
-    "type" : "Dropdown",
-    "choices" : [ {
-      "name" : "Delete Document",
-      "value" : "deleteDocument"
-    }, {
-      "name" : "Execute N1QL Query",
-      "value" : "query"
-    }, {
-      "name" : "Get Document",
-      "value" : "getDocument"
-    }, {
-      "name" : "Replace Document",
-      "value" : "replaceDocument"
-    }, {
-      "name" : "Upsert Document",
-      "value" : "upsertDocument"
     } ]
   }, {
     "id" : "version",
