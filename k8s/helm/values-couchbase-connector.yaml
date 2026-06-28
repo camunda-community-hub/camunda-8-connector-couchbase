@@ -1,0 +1,35 @@
+# Camunda 8.9 Helm chart (chart version 14.5.0) values override
+#
+# Adds the Couchbase DB Connector to the existing connectors-bundle WITHOUT
+# replacing or rebuilding the official image. The connector JAR is injected
+# at pod startup via an initContainer into /opt/custom/, which is already
+# configured as a loader.path in the bundle's start.sh.
+#
+# Apply with:
+#   helm upgrade --install camunda camunda/camunda-platform \
+#     --version 14.5.0 \
+#     --namespace camunda \
+#     -f your-existing-values.yaml \
+#     -f k8s/helm/values-couchbase-connector.yaml
+
+connectors:
+  initContainers:
+    - name: copy-couchbase-connector
+      image: ghcr.io/camunda-community-hub/connector-couchbase:1.0.0
+      command: ["cp", "/opt/connector-couchbase.jar", "/opt/custom/connector-couchbase.jar"]
+      volumeMounts:
+        - name: custom-connectors
+          mountPath: /opt/custom
+
+  extraVolumes:
+    - name: custom-connectors
+      emptyDir: {}
+
+  extraVolumeMounts:
+    - name: custom-connectors
+      mountPath: /opt/custom
+
+  logging:
+    level:
+      io.camunda.connector: INFO
+      io.camunda.connector.couchbase: DEBUG

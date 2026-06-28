@@ -1,0 +1,173 @@
+{
+  "info": {
+    "name": "Couchbase Connector — Load Test",
+    "description": "Performance load test for the Couchbase Camunda connector.\n\n## Running the load test\n\n1. Import this collection into Postman\n2. Create an Environment with the variables below (or edit Collection Variables)\n3. Open the collection → **Run** → **Performance** tab\n4. Set **Virtual Users** and **Duration** as needed\n   - Each VU issues one `POST /v2/process-instances` request at a time\n   - Throughput (PI/s) = Virtual Users ÷ avg response time (s)\n   - Example: 20 VUs × ~500ms latency ≈ 40 PI/s sustained\n5. Click **Run** and watch the throughput graph\n\n## Collection Variables (edit these)\n- `baseUrl`      — https://camunda.local/orchestration\n- `issuerUrl`    — https://camunda.local/auth/realms/camunda-platform\n- `clientId`     — orchestration\n- `clientSecret` — demo\n- `processId`    — Process_1a4nqlm",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl",       "value": "https://camunda.local/orchestration", "type": "string" },
+    { "key": "issuerUrl",     "value": "https://camunda.local/auth/realms/camunda-platform", "type": "string" },
+    { "key": "clientId",      "value": "orchestration", "type": "string" },
+    { "key": "clientSecret",  "value": "demo", "type": "string" },
+    { "key": "processId",     "value": "Process_1a4nqlm", "type": "string" },
+    { "key": "accessToken",   "value": "", "type": "string" },
+    { "key": "tokenExpiresAt","value": "0", "type": "string" }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Refresh token if missing or expiring within 30s",
+          "const expiresAt = parseInt(pm.collectionVariables.get('tokenExpiresAt') || '0');",
+          "const now = Math.floor(Date.now() / 1000);",
+          "",
+          "if (!pm.collectionVariables.get('accessToken') || now >= expiresAt - 30) {",
+          "    const issuerUrl  = pm.collectionVariables.get('issuerUrl');",
+          "    const clientId     = pm.collectionVariables.get('clientId');",
+          "    const clientSecret = pm.collectionVariables.get('clientSecret');",
+          "",
+          "    pm.sendRequest({",
+          "        url: `${issuerUrl}/protocol/openid-connect/token`,",
+          "        method: 'POST',",
+          "        header: { 'Content-Type': 'application/x-www-form-urlencoded' },",
+          "        body: {",
+          "            mode: 'urlencoded',",
+          "            urlencoded: [",
+          "                { key: 'grant_type',    value: 'client_credentials' },",
+          "                { key: 'client_id',     value: clientId },",
+          "                { key: 'client_secret', value: clientSecret },",
+          "                { key: 'audience',      value: clientId }",
+          "            ]",
+          "        }",
+          "    }, (err, res) => {",
+          "        if (err) { console.error('Token fetch failed:', err); return; }",
+          "        const body = res.json();",
+          "        pm.collectionVariables.set('accessToken', body.access_token);",
+          "        pm.collectionVariables.set('tokenExpiresAt', String(now + body.expires_in));",
+          "        console.log(`Token refreshed, expires in ${body.expires_in}s`);",
+          "    });",
+          "}",
+          "",
+          "// Randomize request variables",
+          "const orderId    = 'ORD-' + Math.floor(Math.random() * 900000 + 100000);",
+          "const customerId = 'CUST-' + Math.floor(Math.random() * 500 + 1000);",
+          "const qty        = Math.floor(Math.random() * 50 + 1);",
+          "",
+          "pm.variables.set('orderId',    orderId);",
+          "pm.variables.set('customerId', customerId);",
+          "pm.variables.set('qty',        qty);"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Get Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Token received', () => {",
+                  "    pm.response.to.have.status(200);",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body).to.have.property('access_token');",
+                  "    pm.collectionVariables.set('accessToken', body.access_token);",
+                  "    pm.collectionVariables.set('tokenExpiresAt',",
+                  "        String(Math.floor(Date.now() / 1000) + body.expires_in));",
+                  "    console.log(`Token valid for ${body.expires_in}s`);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "grant_type",    "value": "client_credentials" },
+                { "key": "client_id",     "value": "{{clientId}}" },
+                { "key": "client_secret", "value": "{{clientSecret}}" },
+                { "key": "audience",      "value": "{{clientId}}" }
+              ]
+            },
+            "url": {
+              "raw": "{{issuerUrl}}/protocol/openid-connect/token",
+              "host": ["{{issuerUrl}}"],
+              "path": ["protocol", "openid-connect", "token"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Process Instances",
+      "item": [
+        {
+          "name": "Create Process Instance",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const responseTime = pm.response.responseTime;",
+                  "",
+                  "pm.test('Status 200 or 201', () => {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "",
+                  "pm.test('processInstanceKey present', () => {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body).to.have.property('processInstanceKey');",
+                  "});",
+                  "",
+                  "pm.test('Response time < 2000ms', () => {",
+                  "    pm.expect(responseTime).to.be.below(2000);",
+                  "});",
+                  "",
+                  "// Track latency buckets in collection vars for summary",
+                  "const buckets = JSON.parse(pm.collectionVariables.get('latencyBuckets') || '{\"p50\":0,\"p95\":0,\"p99\":0,\"count\":0,\"totalMs\":0}');",
+                  "buckets.count++;",
+                  "buckets.totalMs += responseTime;",
+                  "pm.collectionVariables.set('latencyBuckets', JSON.stringify(buckets));",
+                  "",
+                  "if (pm.response.code !== 200 && pm.response.code !== 201) {",
+                  "    console.error('FAILED:', pm.response.text());",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"processDefinitionId\": \"{{processId}}\",\n  \"variables\": {\n    \"order_id\":   \"{{orderId}}\",\n    \"customer_id\": \"{{customerId}}\",\n    \"qty\": {{qty}}\n  }\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/v2/process-instances",
+              "host": ["{{baseUrl}}"],
+              "path": ["v2", "process-instances"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

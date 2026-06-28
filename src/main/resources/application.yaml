@@ -6,15 +6,18 @@ camunda:
     grpc-address: https://camunda.local
     rest-address: https://camunda.local/orchestration
     tenant-id: "<default>"
-    security:
-      enabled: true
     auth:
       method: oidc
       client-id: orchestration
       client-secret: demo
       issuer-url: https://camunda.local/auth/realms/camunda-platform
       audience: orchestration
-
+    execution-threads: 128
+    worker:
+      defaults:
+        stream-enabled: true
+        max-jobs-active: 128
+        request-timeout: PT20S
 # ── Local Camunda 8 Run ──────────────────────────────────────────────────────
 #camunda:
 #  client:

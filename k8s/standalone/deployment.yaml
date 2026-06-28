@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: couchbase-connector
+  namespace: connectors
+  labels:
+    app: couchbase-connector
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: couchbase-connector
+  template:
+    metadata:
+      labels:
+        app: couchbase-connector
+    spec:
+      initContainers:
+        # Copies the Couchbase connector JAR into the shared volume at /opt/custom/.
+        # The official connectors-bundle start.sh already sets -Dloader.path=/opt/custom/
+        # so the JAR is picked up on startup alongside all out-of-the-box connectors.
+        - name: copy-couchbase-connector
+          image: ghcr.io/camunda-community-hub/connector-couchbase:1.0.0
+          command: ["cp", "/opt/connector-couchbase.jar", "/opt/custom/connector-couchbase.jar"]
+          volumeMounts:
+            - name: custom-connectors
+              mountPath: /opt/custom
+
+      containers:
+        - name: connectors
+          image: camunda/connectors-bundle:8.9.5
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              name: http
+          volumeMounts:
+            - name: custom-connectors
+              mountPath: /opt/custom
+          env:
+            - name: CAMUNDA_CLIENT_MODE
+              value: "self-managed"
+            - name: CAMUNDA_CLIENT_ZEEBE_REST_ADDRESS
+              value: "https://<zeebe-rest-host>/orchestration"
+            - name: CAMUNDA_CLIENT_ZEEBE_PREFER_REST_OVER_GRPC
+              value: "true"
+            - name: CAMUNDA_CLIENT_AUTH_ISSUER
+              value: "https://<keycloak-host>/auth/realms/camunda-platform"
+            - name: CAMUNDA_CLIENT_AUTH_CLIENT_ID
+              value: "connectors"
+            - name: CAMUNDA_CLIENT_AUTH_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: couchbase-connector-secrets
+                  key: CAMUNDA_CLIENT_AUTH_CLIENT_SECRET
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "1Gi"
+            limits:
+              cpu: "1000m"
+              memory: "2Gi"
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            failureThreshold: 5
+
+      volumes:
+        - name: custom-connectors
+          emptyDir: {}
