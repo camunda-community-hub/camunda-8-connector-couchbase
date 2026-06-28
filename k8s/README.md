@@ -12,7 +12,7 @@ Both patterns use the same mechanism: the `camunda/connectors-bundle` image ship
 ## How it works
 
 ```
-camunda/connectors-bundle:8.9.5
+camunda/connectors-bundle:8.9.0
 │
 ├── /opt/app/        ← built-in OOB connector JARs (HTTP, Slack, etc.)
 └── /opt/custom/     ← loader.path; empty by default, mounted at runtime
@@ -174,17 +174,19 @@ Inject the Couchbase connector into the existing `connectors` component managed 
 
 | Camunda version | Helm chart version |
 |---|---|
-| 8.9.x | `14.5.0` |
+| 8.9.x | `14.0.0` |
 
 ### Apply the values override
 
 ```bash
-helm upgrade --install camunda camunda/camunda-platform \
-  --version 14.5.0 \
+helm upgrade camunda camunda/camunda-platform \
+  --version 14.0.0 \
   --namespace camunda \
-  -f your-existing-values.yaml \
+  --reuse-values \
   -f k8s/helm/values-couchbase-connector.yaml
 ```
+
+`--reuse-values` preserves every existing value in your live release and merges only the connector injection settings on top.
 
 ### What the override does
 
@@ -207,7 +209,7 @@ connectors:
       mountPath: /opt/custom
 ```
 
-The Helm chart renders the initContainer and volume inside the existing connectors `Deployment`. The official connectors image, the chart-generated `application.yaml` ConfigMap (containing Zeebe address, OIDC issuer, and client credentials derived from your global Helm values), and all other chart-managed settings remain completely unchanged.
+The Helm chart renders the initContainer and volume inside the existing connectors `Deployment`. The official connectors image, the chart-generated `application.yaml` ConfigMap (Zeebe address, OIDC issuer, client credentials), and all other chart-managed settings remain completely unchanged.
 
 ### Adding multiple custom connectors
 

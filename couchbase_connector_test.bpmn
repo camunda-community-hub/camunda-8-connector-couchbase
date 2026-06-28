@@ -47,7 +47,7 @@
           <zeebe:header key="retryBackoff" value="PT0S" />
         </zeebe:taskHeaders>
         <zeebe:ioMapping>
-          <zeebe:input source="couchbase://localhost" target="authentication.connectionString" />
+          <zeebe:input source="couchbase://host.minikube.internal" target="authentication.connectionString" />
           <zeebe:input source="Administrator" target="authentication.username" />
           <zeebe:input source="Password123!" target="authentication.password" />
           <zeebe:input source="demo" target="bucketName" />
@@ -71,7 +71,7 @@
           <zeebe:header key="retryBackoff" value="PT0S" />
         </zeebe:taskHeaders>
         <zeebe:ioMapping>
-          <zeebe:input source="couchbase://localhost" target="authentication.connectionString" />
+          <zeebe:input source="couchbase://host.minikube.internal" target="authentication.connectionString" />
           <zeebe:input source="Administrator" target="authentication.username" />
           <zeebe:input source="Password123!" target="authentication.password" />
           <zeebe:input source="demo" target="bucketName" />
@@ -94,7 +94,7 @@
           <zeebe:header key="retryBackoff" value="PT0S" />
         </zeebe:taskHeaders>
         <zeebe:ioMapping>
-          <zeebe:input source="couchbase://localhost" target="authentication.connectionString" />
+          <zeebe:input source="couchbase://host.minikube.internal" target="authentication.connectionString" />
           <zeebe:input source="Administrator" target="authentication.username" />
           <zeebe:input source="Password123!" target="authentication.password" />
           <zeebe:input source="demo" target="bucketName" />
@@ -118,7 +118,7 @@
           <zeebe:header key="retryBackoff" value="PT0S" />
         </zeebe:taskHeaders>
         <zeebe:ioMapping>
-          <zeebe:input source="couchbase://localhost" target="authentication.connectionString" />
+          <zeebe:input source="couchbase://host.minikube.internal" target="authentication.connectionString" />
           <zeebe:input source="Administrator" target="authentication.username" />
           <zeebe:input source="Password123!" target="authentication.password" />
           <zeebe:input source="SELECT orderId, customerId, qty, orderDate&#10;FROM `demo`.`_default`.`orders`" target="query" />
@@ -138,7 +138,7 @@
           <zeebe:header key="retryBackoff" value="PT0S" />
         </zeebe:taskHeaders>
         <zeebe:ioMapping>
-          <zeebe:input source="couchbase://localhost" target="authentication.connectionString" />
+          <zeebe:input source="couchbase://host.minikube.internal" target="authentication.connectionString" />
           <zeebe:input source="Administrator" target="authentication.username" />
           <zeebe:input source="Password123!" target="authentication.password" />
           <zeebe:input source="demo" target="bucketName" />
@@ -216,26 +216,26 @@
         <dc:Bounds x="130" y="420" width="930" height="60" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Association_0nv0rvu_di" bpmnElement="Association_0nv0rvu">
-        <di:waypoint x="933" y="240" />
-        <di:waypoint x="1001" y="360" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Association_06w6ud6_di" bpmnElement="Association_06w6ud6">
-        <di:waypoint x="787" y="240" />
-        <di:waypoint x="834" y="353" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Association_1df7pdq_di" bpmnElement="Association_1df7pdq">
-        <di:waypoint x="638" y="240" />
-        <di:waypoint x="693" y="360" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Association_16o1q8e_di" bpmnElement="Association_16o1q8e">
-        <di:waypoint x="489" y="240" />
-        <di:waypoint x="543" y="353" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Association_0qfekrj_di" bpmnElement="Association_0qfekrj">
-        <di:waypoint x="339" y="240" />
-        <di:waypoint x="393" y="353" />
-      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_1g9pwus_di" bpmnElement="TextAnnotation_1g9pwus">
+        <dc:Bounds x="350" y="353" width="100" height="41" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1t869l8_di" bpmnElement="TextAnnotation_1t869l8">
+        <dc:Bounds x="500" y="353" width="100" height="41" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1ozha6j_di" bpmnElement="TextAnnotation_1ozha6j">
+        <dc:Bounds x="650" y="360" width="100" height="41" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_0xiktla_di" bpmnElement="TextAnnotation_0xiktla">
+        <dc:Bounds x="790" y="353" width="100" height="55" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1hz0vt1_di" bpmnElement="TextAnnotation_1hz0vt1">
+        <dc:Bounds x="960" y="360" width="100" height="41" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_0t5e5d6_di" bpmnElement="Flow_0t5e5d6">
         <di:waypoint x="320" y="240" />
         <di:waypoint x="320" y="420" />
@@ -256,26 +256,26 @@
         <di:waypoint x="910" y="240" />
         <di:waypoint x="910" y="420" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="TextAnnotation_1hz0vt1_di" bpmnElement="TextAnnotation_1hz0vt1">
-        <dc:Bounds x="960" y="360" width="100" height="41" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="TextAnnotation_0xiktla_di" bpmnElement="TextAnnotation_0xiktla">
-        <dc:Bounds x="790" y="353" width="100" height="55" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="TextAnnotation_1ozha6j_di" bpmnElement="TextAnnotation_1ozha6j">
-        <dc:Bounds x="650" y="360" width="100" height="41" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="TextAnnotation_1t869l8_di" bpmnElement="TextAnnotation_1t869l8">
-        <dc:Bounds x="500" y="353" width="100" height="41" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="TextAnnotation_1g9pwus_di" bpmnElement="TextAnnotation_1g9pwus">
-        <dc:Bounds x="350" y="353" width="100" height="41" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_0qfekrj_di" bpmnElement="Association_0qfekrj">
+        <di:waypoint x="339" y="240" />
+        <di:waypoint x="393" y="353" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_16o1q8e_di" bpmnElement="Association_16o1q8e">
+        <di:waypoint x="489" y="240" />
+        <di:waypoint x="543" y="353" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_1df7pdq_di" bpmnElement="Association_1df7pdq">
+        <di:waypoint x="638" y="240" />
+        <di:waypoint x="693" y="360" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_06w6ud6_di" bpmnElement="Association_06w6ud6">
+        <di:waypoint x="787" y="240" />
+        <di:waypoint x="834" y="353" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0nv0rvu_di" bpmnElement="Association_0nv0rvu">
+        <di:waypoint x="933" y="240" />
+        <di:waypoint x="1001" y="360" />
+      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>

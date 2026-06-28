@@ -16,6 +16,10 @@ connectors:
   initContainers:
     - name: copy-couchbase-connector
       image: ghcr.io/camunda-community-hub/connector-couchbase:1.0.0
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
       command: ["cp", "/opt/connector-couchbase.jar", "/opt/custom/connector-couchbase.jar"]
       volumeMounts:
         - name: custom-connectors

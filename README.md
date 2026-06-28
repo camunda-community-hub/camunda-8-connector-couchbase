@@ -238,6 +238,16 @@ Use the **Error Handling** section in the element template to catch these codes 
 
 ---
 
+## Kubernetes Deployment
+
+See [k8s/README.md](k8s/README.md) for full instructions covering:
+
+- Building and pushing the connector Docker image to `ghcr.io/camunda-community-hub/`
+- **Option A** — Independent pod deployment with the official `camunda/connectors-bundle`
+- **Option B** — Injection into an existing Camunda Helm chart deployment (8.9)
+
+---
+
 ## References
 
 - [Couchbase Java SDK — Getting started](https://docs.couchbase.com/java-sdk/current/hello-world/start-using-sdk.html)
