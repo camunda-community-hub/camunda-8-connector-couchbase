@@ -241,6 +241,10 @@ Map connector output to process variables using the **Output Mapping** section i
 
 Use the **Error Handling** section in the element template to catch these codes with BPMN boundary error events.
 
+![Error Handling panel showing errorExpression for COLLECTION_NOT_FOUND](doc/example-3.png)
+
+*The Error Handling panel configured with a FEEL `errorExpression` that catches `COLLECTION_NOT_FOUND` and maps it to a named BPMN error for a boundary event.*
+
 ---
 
 ## Kubernetes Deployment
