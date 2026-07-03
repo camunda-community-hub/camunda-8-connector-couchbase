@@ -44,7 +44,7 @@ import org.slf4j.LoggerFactory;
     version = 1,
     description = "Perform Couchbase DB operations: Get, Upsert, Replace, Delete documents and execute SQL++ / N1QL queries.",
     icon = "icon.svg",
-    documentationRef = "https://docs.couchbase.com/java-sdk/current/hello-world/start-using-sdk.html",
+    documentationRef = "https://github.com/camunda-community-hub/camunda-8-connector-couchbase/blob/main/README.md",
     propertyGroups = {
         @PropertyGroup(id = "authentication", label = "Authentication"),
         @PropertyGroup(id = "document",       label = "Document Settings"),

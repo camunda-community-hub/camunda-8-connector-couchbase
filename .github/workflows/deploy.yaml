@@ -34,6 +34,10 @@ jobs:
           sonatype-central-portal-usr: ${{ secrets.COMMUNITY_HUB_MAVEN_CENTRAL_CP_USR }}
           sonatype-central-portal-psw: ${{ secrets.COMMUNITY_HUB_MAVEN_CENTRAL_CP_PSW }}
           maven-gpg-passphrase: ${{ secrets.MAVEN_CENTRAL_GPG_SIGNING_KEY_PASSPHRASE }}
+          # Skip GPG signing for SNAPSHOT deployments (push to main).
+          # Sonatype SNAPSHOT repositories do not require signed artifacts.
+          # GPG signing is enforced automatically for release builds.
+          maven-additional-options: ${{ github.event_name == 'push' && '-Dgpg.skip=true' || '' }}
           maven-auto-release-after-close: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
         id: release
