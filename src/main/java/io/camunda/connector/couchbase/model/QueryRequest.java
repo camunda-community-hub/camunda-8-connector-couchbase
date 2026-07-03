@@ -4,6 +4,7 @@ import io.camunda.connector.generator.java.annotation.TemplateProperty;
 import io.camunda.connector.generator.java.annotation.TemplateProperty.DropdownPropertyChoice;
 import io.camunda.connector.generator.java.annotation.TemplateProperty.PropertyType;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
@@ -30,18 +31,20 @@ public record QueryRequest(
     )
     List<Object> parameters,
 
+    @Min(1)
     @TemplateProperty(
         group = "query",
         label = "Max Rows",
-        description = "Maximum rows to return. A LIMIT clause is automatically appended if the query has none. Default: 1000.",
+        description = "Maximum rows to return (must be ≥ 1). A LIMIT clause is automatically appended if the query has none. Keep this low — all rows are loaded into memory before returning. Default: 1000.",
         optional = true
     )
     Integer maxRows,
 
+    @Min(1)
     @TemplateProperty(
         group = "query",
         label = "Query Timeout (seconds)",
-        description = "Server-side query execution timeout in seconds. Default: 30.",
+        description = "Server-side query execution timeout in seconds (must be ≥ 1). Default: 30.",
         optional = true
     )
     Integer queryTimeoutSeconds,
@@ -63,13 +66,13 @@ public record QueryRequest(
     @TemplateProperty(
         group = "query",
         label = "Statement Policy",
-        description = "ANY: all N1QL statements allowed. SELECT_ONLY: restricts to read-only SELECT/WITH statements.",
-        defaultValue = "ANY",
+        description = "SELECT_ONLY (default, recommended): restricts to read-only SELECT/WITH statements. ANY: permits all N1QL statements including INSERT/UPDATE/DELETE.",
+        defaultValue = "SELECT_ONLY",
         optional = true,
         type = PropertyType.Dropdown,
         choices = {
-            @DropdownPropertyChoice(label = "Any statement", value = "ANY"),
-            @DropdownPropertyChoice(label = "SELECT only (read-only)", value = "SELECT_ONLY")
+            @DropdownPropertyChoice(label = "SELECT only (read-only, recommended)", value = "SELECT_ONLY"),
+            @DropdownPropertyChoice(label = "Any statement", value = "ANY")
         }
     )
     String statementPolicy

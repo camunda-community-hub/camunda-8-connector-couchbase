@@ -225,7 +225,8 @@ Map connector output to process variables using the **Output Mapping** section i
 | Error Code | Operation | Cause | Resolution |
 |---|---|---|---|
 | `DOCUMENT_NOT_FOUND` | Get, Replace, Delete | No document exists for the given key | Verify the Document ID and bucket/scope/collection path |
-| `UPSERT_FAILED` | Upsert | KV write failed (timeout, collection not found, auth) | Check that the bucket and collection exist; verify credentials |
+| `COLLECTION_NOT_FOUND` | Get, Upsert, Replace, Delete | The bucket, scope, or collection name does not exist | Verify the bucket, scope, and collection names — check for typos such as trailing underscores |
+| `UPSERT_FAILED` | Upsert | KV write failed for an unexpected reason | Check connector logs for detail |
 | `REPLACE_FAILED` | Replace | KV write failed | Same as above; also ensure the document already exists |
 | `DELETE_FAILED` | Delete | KV remove failed | Check document exists and credentials have write access |
 | `QUERY_FAILED` | Query | N1QL execution error (syntax error, missing index, auth) | Verify the query syntax; ensure a primary or covering index exists on the collection |
@@ -233,6 +234,10 @@ Map connector output to process variables using the **Output Mapping** section i
 | `INVALID_CONTENT` | Upsert, Replace | Document content is not a valid JSON object or FEEL context | Ensure the content field evaluates to a FEEL context `= { ... }` or a valid JSON string |
 | `TLS_REQUIRED` | All | `couchbase://` connection string used when **Require TLS** is enabled | Change the connection string to `couchbases://` or disable the TLS requirement |
 | `GET_FAILED` | Get | Unexpected error during retrieval | Check connector logs for internal detail |
+| `AUTHENTICATION_FAILED` | All | Wrong credentials or expired password; also raised mid-operation when a cached cluster becomes invalid after credential rotation | Verify the Couchbase username and password; the stale cluster is evicted automatically so the next attempt will reconnect |
+| `CONNECTION_TIMEOUT` | All | Connection to the Couchbase cluster did not become ready within the 15-second timeout | Verify the connection string and ensure the cluster is reachable from the connector host |
+| `UNKNOWN_HOST` | All | The hostname in the connection string could not be resolved (DNS failure) | Verify the hostname in the connection string and check DNS resolution from the connector host |
+| `CONNECTION_FAILED` | All | Unexpected error while establishing the cluster connection | Check the connection string, credentials, and network; review connector logs for the root cause |
 
 Use the **Error Handling** section in the element template to catch these codes with BPMN boundary error events.
 

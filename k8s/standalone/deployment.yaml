@@ -20,7 +20,8 @@ spec:
         # The official connectors-bundle start.sh already sets -Dloader.path=/opt/custom/
         # so the JAR is picked up on startup alongside all out-of-the-box connectors.
         - name: copy-couchbase-connector
-          image: ghcr.io/camunda-community-hub/connector-couchbase:1.0.0
+          image: connector-couchbase:1.0.0
+          imagePullPolicy: Never
           command: ["cp", "/opt/connector-couchbase.jar", "/opt/custom/connector-couchbase.jar"]
           volumeMounts:
             - name: custom-connectors
@@ -30,6 +31,13 @@ spec:
         - name: connectors
           image: camunda/connectors-bundle:8.9.5
           imagePullPolicy: Always
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
           ports:
             - containerPort: 8080
               name: http

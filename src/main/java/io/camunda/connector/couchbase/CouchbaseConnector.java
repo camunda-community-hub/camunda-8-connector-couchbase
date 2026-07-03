@@ -1,6 +1,9 @@
 package io.camunda.connector.couchbase;
 
+import com.couchbase.client.core.error.AuthenticationFailureException;
+import com.couchbase.client.core.error.CollectionNotFoundException;
 import com.couchbase.client.core.error.DocumentNotFoundException;
+import com.couchbase.client.core.error.ScopeNotFoundException;
 import com.couchbase.client.java.Cluster;
 import com.couchbase.client.java.Collection;
 import com.couchbase.client.java.json.JsonArray;
@@ -27,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,10 +56,10 @@ public class CouchbaseConnector implements OutboundConnectorProvider {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CouchbaseConnector.class);
 
-    private static final int    DEFAULT_MAX_ROWS       = 1000;
-    private static final int    DEFAULT_QUERY_TIMEOUT  = 30;
-    private static final Pattern LIMIT_PATTERN  = Pattern.compile("\\bLIMIT\\b", Pattern.CASE_INSENSITIVE);
-    private static final Pattern SELECT_PATTERN = Pattern.compile("^\\s*(SELECT|WITH)\\b", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+    private static final int     DEFAULT_MAX_ROWS      = 1000;
+    private static final int     DEFAULT_QUERY_TIMEOUT = 30;
+    private static final Pattern LIMIT_PATTERN         = Pattern.compile("\\bLIMIT\\b", Pattern.CASE_INSENSITIVE);
+    private static final Pattern SELECT_PATTERN        = Pattern.compile("^\\s*(SELECT|WITH)\\b", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
     private final Function<CouchbaseAuthentication, Cluster> clusterSupplier;
 
@@ -93,9 +95,15 @@ public class CouchbaseConnector implements OutboundConnectorProvider {
                 "cas",     result.cas()
             );
         } catch (DocumentNotFoundException e) {
-            throw new ConnectorException("DOCUMENT_NOT_FOUND",
-                "Document not found.", e);
+            throw new ConnectorException("DOCUMENT_NOT_FOUND", "Document not found.", e);
+        } catch (CollectionNotFoundException | ScopeNotFoundException e) {
+            throw collectionNotFound(request.collectionName(), request.bucketName(), e);
+        } catch (AuthenticationFailureException e) {
+            throw authFailed(request.authentication(), e);
+        } catch (ConnectorException e) {
+            throw e;
         } catch (Exception e) {
+            if (isCollectionNotFoundTimeout(e)) throw collectionNotFound(request.collectionName(), request.bucketName(), e);
             LOGGER.error("getDocument failed — bucket={}: {}", request.bucketName(), e.getMessage(), e);
             throw new ConnectorException("GET_FAILED", "Document retrieval failed.", e);
         }
@@ -115,9 +123,14 @@ public class CouchbaseConnector implements OutboundConnectorProvider {
                 "cas",     result.cas(),
                 "success", true
             );
+        } catch (CollectionNotFoundException | ScopeNotFoundException e) {
+            throw collectionNotFound(request.collectionName(), request.bucketName(), e);
+        } catch (AuthenticationFailureException e) {
+            throw authFailed(request.authentication(), e);
         } catch (ConnectorException e) {
             throw e;
         } catch (Exception e) {
+            if (isCollectionNotFoundTimeout(e)) throw collectionNotFound(request.collectionName(), request.bucketName(), e);
             LOGGER.error("upsertDocument failed — bucket={}: {}", request.bucketName(), e.getMessage(), e);
             throw new ConnectorException("UPSERT_FAILED", "Upsert operation failed.", e);
         }
@@ -138,11 +151,15 @@ public class CouchbaseConnector implements OutboundConnectorProvider {
                 "success", true
             );
         } catch (DocumentNotFoundException e) {
-            throw new ConnectorException("DOCUMENT_NOT_FOUND",
-                "Document not found. Use Upsert to create it.", e);
+            throw new ConnectorException("DOCUMENT_NOT_FOUND", "Document not found. Use Upsert to create it.", e);
+        } catch (CollectionNotFoundException | ScopeNotFoundException e) {
+            throw collectionNotFound(request.collectionName(), request.bucketName(), e);
+        } catch (AuthenticationFailureException e) {
+            throw authFailed(request.authentication(), e);
         } catch (ConnectorException e) {
             throw e;
         } catch (Exception e) {
+            if (isCollectionNotFoundTimeout(e)) throw collectionNotFound(request.collectionName(), request.bucketName(), e);
             LOGGER.error("replaceDocument failed — bucket={}: {}", request.bucketName(), e.getMessage(), e);
             throw new ConnectorException("REPLACE_FAILED", "Replace operation failed.", e);
         }
@@ -163,7 +180,14 @@ public class CouchbaseConnector implements OutboundConnectorProvider {
             );
         } catch (DocumentNotFoundException e) {
             throw new ConnectorException("DOCUMENT_NOT_FOUND", "Document not found.", e);
+        } catch (CollectionNotFoundException | ScopeNotFoundException e) {
+            throw collectionNotFound(request.collectionName(), request.bucketName(), e);
+        } catch (AuthenticationFailureException e) {
+            throw authFailed(request.authentication(), e);
+        } catch (ConnectorException e) {
+            throw e;
         } catch (Exception e) {
+            if (isCollectionNotFoundTimeout(e)) throw collectionNotFound(request.collectionName(), request.bucketName(), e);
             LOGGER.error("deleteDocument failed — bucket={}: {}", request.bucketName(), e.getMessage(), e);
             throw new ConnectorException("DELETE_FAILED", "Delete operation failed.", e);
         }
@@ -178,7 +202,6 @@ public class CouchbaseConnector implements OutboundConnectorProvider {
 
         int maxRows = request.maxRows() != null ? request.maxRows() : DEFAULT_MAX_ROWS;
         String queryText = injectLimitIfAbsent(request.query(), maxRows);
-
         QueryOptions opts = buildQueryOptions(request);
 
         try {
@@ -186,7 +209,7 @@ public class CouchbaseConnector implements OutboundConnectorProvider {
             List<Map<String, Object>> rows = result.rowsAsObject()
                 .stream()
                 .map(JsonObject::toMap)
-                .collect(Collectors.toList());
+                .toList();
 
             if (rows.size() >= maxRows) {
                 LOGGER.warn("query returned {} rows, which hit the maxRows cap of {}. "
@@ -194,10 +217,15 @@ public class CouchbaseConnector implements OutboundConnectorProvider {
             }
 
             return Map.of("rows", rows, "rowCount", rows.size());
+        } catch (AuthenticationFailureException e) {
+            throw authFailed(request.authentication(), e);
         } catch (ConnectorException e) {
             throw e;
         } catch (Exception e) {
-            LOGGER.error("query failed: {}", e.getMessage(), e);
+            // Log only the class+message at ERROR to avoid embedding query text in log output;
+            // full stack trace goes to DEBUG for trusted diagnostic environments.
+            LOGGER.error("query failed ({}): {}", e.getClass().getSimpleName(), e.getMessage());
+            LOGGER.debug("query failed — full exception", e);
             throw new ConnectorException("QUERY_FAILED", "Query execution failed.", e);
         }
     }
@@ -219,7 +247,14 @@ public class CouchbaseConnector implements OutboundConnectorProvider {
     }
 
     private static void enforceTls(CouchbaseAuthentication auth) {
-        if ("true".equalsIgnoreCase(auth.requireTls())
+        String tls = auth.requireTls();
+        if (tls != null && !tls.isBlank()
+                && !"true".equalsIgnoreCase(tls)
+                && !"false".equalsIgnoreCase(tls)) {
+            throw new ConnectorException("INVALID_CONFIG",
+                "Invalid value for Require TLS: '" + tls + "'. Must be 'true' or 'false'.");
+        }
+        if ("true".equalsIgnoreCase(tls)
                 && !auth.connectionString().startsWith("couchbases://")) {
             throw new ConnectorException("TLS_REQUIRED",
                 "TLS is required for this connector. Use couchbases:// in the connection string.");
@@ -227,7 +262,14 @@ public class CouchbaseConnector implements OutboundConnectorProvider {
     }
 
     private static void enforceStatementPolicy(QueryRequest request) {
-        if ("SELECT_ONLY".equalsIgnoreCase(request.statementPolicy())) {
+        String policy = request.statementPolicy();
+        if (policy != null && !policy.isBlank()
+                && !"ANY".equalsIgnoreCase(policy)
+                && !"SELECT_ONLY".equalsIgnoreCase(policy)) {
+            throw new ConnectorException("INVALID_CONFIG",
+                "Invalid statementPolicy value: '" + policy + "'. Must be 'ANY' or 'SELECT_ONLY'.");
+        }
+        if ("SELECT_ONLY".equalsIgnoreCase(policy)) {
             if (!SELECT_PATTERN.matcher(request.query().trim()).find()) {
                 throw new ConnectorException("QUERY_POLICY_VIOLATION",
                     "Only SELECT statements are permitted by the current statement policy.");
@@ -235,7 +277,12 @@ public class CouchbaseConnector implements OutboundConnectorProvider {
         }
     }
 
-    /** Strips trailing semicolons and appends LIMIT cap if the query has no LIMIT clause. */
+    /**
+     * Best-effort guardrail: appends LIMIT cap when no LIMIT keyword is detected (text scan,
+     * not a SQL++ parser). A LIMIT inside a subquery or string literal satisfies the check
+     * while the outer query remains unbounded — treat this as a convenience default, not a
+     * hard enforcement mechanism.
+     */
     private static String injectLimitIfAbsent(String rawQuery, int cap) {
         String q = rawQuery.trim().replaceAll(";\\s*$", "");
         if (!LIMIT_PATTERN.matcher(q).find()) {
@@ -261,6 +308,29 @@ public class CouchbaseConnector implements OutboundConnectorProvider {
         }
 
         return opts;
+    }
+
+    private static ConnectorException collectionNotFound(String collection, String bucket, Exception cause) {
+        return new ConnectorException("COLLECTION_NOT_FOUND",
+            "Collection '" + collection + "' not found in bucket '" + bucket
+                + "'. Verify the bucket, scope, and collection names.", cause);
+    }
+
+    private ConnectorException authFailed(CouchbaseAuthentication auth, AuthenticationFailureException cause) {
+        CouchbaseClientFactory.evict(auth.connectionString(), auth.username(), auth.password());
+        return new ConnectorException("AUTHENTICATION_FAILED",
+            "Authentication failed. Verify the Couchbase username and password.", cause);
+    }
+
+    /**
+     * Returns true when a KV timeout was caused by an unresolvable collection name.
+     * The Couchbase SDK retries GetCollectionId until the KV timeout expires and then
+     * throws AmbiguousTimeoutException / UnambiguousTimeoutException rather than
+     * CollectionNotFoundException. The retry reason is embedded in the exception message.
+     */
+    private static boolean isCollectionNotFoundTimeout(Exception e) {
+        String msg = e.getMessage();
+        return msg != null && msg.contains("COLLECTION_NOT_FOUND");
     }
 
     @SuppressWarnings("unchecked")

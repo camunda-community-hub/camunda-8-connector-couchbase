@@ -1023,9 +1023,9 @@
   }, {
     "id" : "query:statementPolicy",
     "label" : "Statement Policy",
-    "description" : "ANY: all N1QL statements allowed. SELECT_ONLY: restricts to read-only SELECT/WITH statements.",
+    "description" : "SELECT_ONLY (default, recommended): restricts to read-only SELECT/WITH statements. ANY: permits all N1QL statements including INSERT/UPDATE/DELETE.",
     "optional" : true,
-    "value" : "ANY",
+    "value" : "SELECT_ONLY",
     "group" : "query",
     "binding" : {
       "name" : "statementPolicy",
@@ -1040,11 +1040,11 @@
     },
     "type" : "Dropdown",
     "choices" : [ {
+      "name" : "SELECT only (read-only, recommended)",
+      "value" : "SELECT_ONLY"
+    }, {
       "name" : "Any statement",
       "value" : "ANY"
-    }, {
-      "name" : "SELECT only (read-only)",
-      "value" : "SELECT_ONLY"
     } ]
   }, {
     "id" : "version",

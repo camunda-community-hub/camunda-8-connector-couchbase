@@ -1,4 +1,12 @@
 
+# ═══════════════════════════════════════════════════════════════════════════════
+# LOCAL DEV HARNESS ONLY — used by LocalConnectorRuntime to run the connector
+# against a local or test Camunda cluster without deploying to Kubernetes.
+# This file is NOT read by the production connector runtime (connectors-bundle).
+# Production config is supplied via environment variables or an externally
+# mounted application.yaml. Do NOT replace these placeholder values with real
+# credentials — use environment variables or a secrets manager instead.
+# ═══════════════════════════════════════════════════════════════════════════════
 camunda:
   client:
     mode: self-managed
